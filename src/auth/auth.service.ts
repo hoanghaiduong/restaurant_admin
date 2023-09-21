@@ -1,26 +1,31 @@
-import { Injectable } from '@nestjs/common';
-import { CreateAuthDto } from './dto/create-auth.dto';
-import { UpdateAuthDto } from './dto/update-auth.dto';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { FirebaseService } from 'src/firebase/firebase.service';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { UsersService } from 'src/users/users.service';
+
 
 @Injectable()
 export class AuthService {
-  create(createAuthDto: CreateAuthDto) {
-    return 'This action adds a new auth';
+  constructor(private readonly usersService: UsersService,
+    private firebaseService: FirebaseService) { }
+  async auth(req: any) {
+    const uid = req?.uid;
+    let user = await this.usersService.findOneUserExists(uid);
+
+    if (!user) {
+      user = await this.usersService.create({
+        photoURL: req?.picture,
+        emailVerified: req?.email_verified,
+        email: req?.email,
+        uid: req?.uid,
+        firebase: req?.firebase,
+        displayName: req?.name,
+      });
+    }
+
+    return user;
   }
 
-  findAll() {
-    return `This action returns all auth`;
-  }
 
-  findOne(id: number) {
-    return `This action returns a #${id} auth`;
-  }
 
-  update(id: number, updateAuthDto: UpdateAuthDto) {
-    return `This action updates a #${id} auth`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} auth`;
-  }
 }

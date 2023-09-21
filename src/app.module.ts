@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { validationSchema } from './common/config/validation.config';
 import { FirebaseModule } from './firebase/firebase.module';
 import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/users.module';
 
 
 @Module({
@@ -17,7 +18,8 @@ import { AuthModule } from './auth/auth.module';
     }),
     DatabaseModule,
     FirebaseModule,
-    AuthModule
+    AuthModule,
+    UsersModule
   ],
   controllers: [AppController],
   providers: [AppService],

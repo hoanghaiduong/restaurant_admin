@@ -22,13 +22,13 @@ export class FirebaseAuthGuard implements CanActivate {
 
         try {
             const decodedToken = await this.firebaseService.verifyIdToken(token);
-            // Attach the decoded token to the request object for use in the route handler
+
             request.user = decodedToken;
             return true;
         } catch (error) {
             throw new ForbiddenException({
                 message: error.message,
-            }); // Token verification failed
+            });
         }
     }
 }
