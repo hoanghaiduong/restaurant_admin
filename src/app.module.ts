@@ -7,6 +7,10 @@ import { validationSchema } from './common/config/validation.config';
 import { FirebaseModule } from './firebase/firebase.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { RolesModule } from './roles/roles.module';
+import { CategoryModule } from './category/category.module';
+import { CategoryDetailsModule } from './category-details/category-details.module';
+import { CategoryTypeModule } from './category-type/category-type.module';
 
 
 @Module({
@@ -19,7 +23,11 @@ import { UsersModule } from './users/users.module';
     DatabaseModule,
     FirebaseModule,
     AuthModule,
-    UsersModule
+    UsersModule,
+    RolesModule,
+    CategoryModule,
+    CategoryDetailsModule,
+    CategoryTypeModule
   ],
   controllers: [AppController],
   providers: [AppService],
