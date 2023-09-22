@@ -1,26 +1,90 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, OnModuleInit } from '@nestjs/common';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
+import { override } from 'joi';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Role } from './entities/role.entity';
+import { ILike, Repository } from 'typeorm';
+import { Pagination } from 'src/common/pagination/pagination.dto';
+import { PaginationModel } from 'src/common/pagination/pagination.model';
+import { Meta } from 'src/common/pagination/meta.dto';
 
 @Injectable()
-export class RolesService {
-  create(createRoleDto: CreateRoleDto) {
-    return 'This action adds a new role';
+export class RolesService implements OnModuleInit {
+  constructor(@InjectRepository(Role) private roleRepository: Repository<Role>) {
+
+  }
+  async onModuleInit(): Promise<any> {
+    const roleNamesToCreate = ['admin', 'restaurant', 'user'];
+
+    // Tạo một mảng các promise cho việc kiểm tra và tạo role
+    const roleCreationPromises = roleNamesToCreate.map(async (roleName) => {
+      const existingRole = await this.roleRepository.findOne({
+        where: { name: roleName }
+      });
+
+
+      if (!existingRole) {
+        const role = this.roleRepository.create({ name: roleName, actived: true });
+        await this.roleRepository.save(role);
+      }
+    });
+
+    // Chạy tất cả các promise đồng thời
+    await Promise.all(roleCreationPromises);
   }
 
-  findAll() {
-    return `This action returns all roles`;
+  async create(createRoleDto: CreateRoleDto): Promise<Role> {
+    try {
+      const creating = this.roleRepository.create(createRoleDto);
+      return await this.roleRepository.save(creating);
+    } catch (error) {
+      throw new BadRequestException({
+        message: error.message,
+      })
+    }
+  }
+  async findAll(pagination: Pagination): Promise<PaginationModel<Role>> {
+    const [entities, itemCount] = await this.roleRepository.findAndCount({
+      where: {
+        name: ILike(`%${pagination.search}%`)
+      }
+    });
+
+    const meta = new Meta({ pagination, itemCount });
+    return new PaginationModel(entities, meta);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} role`;
+  async findOne(id: string): Promise<Role> {
+    const role = await this.roleRepository.findOne({
+      where: {
+        id
+      }
+    })
+    if (!role) throw new NotFoundException('Role not found')
+    return role
   }
 
-  update(id: number, updateRoleDto: UpdateRoleDto) {
-    return `This action updates a #${id} role`;
+  async update(id: string, updateRoleDto: UpdateRoleDto): Promise<Role> {
+    try {
+      const role = await this.findOne(id);
+      return await this.roleRepository.save({
+        ...role,
+        ...updateRoleDto
+      })
+    } catch (error) {
+      throw new BadRequestException({
+        message: error.message,
+      })
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} role`;
+  async remove(id: string): Promise<Object> {
+    const role = await this.findOne(id);
+    await this.roleRepository.remove(role);
+    return {
+      status: 200,
+      message: 'Role deleted successfully'
+    }
   }
 }

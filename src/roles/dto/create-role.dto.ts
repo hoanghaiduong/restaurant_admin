@@ -1,1 +1,11 @@
-export class CreateRoleDto {}
+import { ApiProperty } from "@nestjs/swagger";
+
+export class CreateRoleDto {
+    @ApiProperty()
+    name: string;
+
+    @ApiProperty({
+        nullable: true
+    })
+    actived?: boolean;
+}
