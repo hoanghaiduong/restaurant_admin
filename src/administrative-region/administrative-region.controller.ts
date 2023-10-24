@@ -7,28 +7,28 @@ import { UpdateAdministrativeRegionDto } from './dto/update-administrative-regio
 export class AdministrativeRegionController {
   constructor(private readonly administrativeRegionService: AdministrativeRegionService) {}
 
-  @Post()
-  create(@Body() createAdministrativeRegionDto: CreateAdministrativeRegionDto) {
-    return this.administrativeRegionService.create(createAdministrativeRegionDto);
-  }
+  // @Post()
+  // create(@Body() createAdministrativeRegionDto: CreateAdministrativeRegionDto) {
+  //   return this.administrativeRegionService.create(createAdministrativeRegionDto);
+  // }
 
-  @Get()
-  findAll() {
-    return this.administrativeRegionService.findAll();
-  }
+  // @Get()
+  // findAll() {
+  //   return this.administrativeRegionService.findAll();
+  // }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.administrativeRegionService.findOne(+id);
-  }
+  // @Get(':id')
+  // findOne(@Param('id') id: string) {
+  //   return this.administrativeRegionService.findOne(+id);
+  // }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAdministrativeRegionDto: UpdateAdministrativeRegionDto) {
-    return this.administrativeRegionService.update(+id, updateAdministrativeRegionDto);
-  }
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updateAdministrativeRegionDto: UpdateAdministrativeRegionDto) {
+  //   return this.administrativeRegionService.update(+id, updateAdministrativeRegionDto);
+  // }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.administrativeRegionService.remove(+id);
-  }
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.administrativeRegionService.remove(+id);
+  // }
 }

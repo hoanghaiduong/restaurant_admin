@@ -7,7 +7,7 @@ import { ApiMultipleFieldFiles } from 'src/common/decorators/file.decorator';
 import { RepresentativeInformation } from './entities/representative-information.entity';
 
 @Controller('representative-information')
-@ApiTags("API Đăng ký thông tin người đại diện thuộc nhà hàng")
+@ApiTags("API Đăng ký thông tin người đại diện thuộc nhà hàng (bước 1)")
 export class RepresentativeInformationController {
   constructor(private readonly representativeInformationService: RepresentativeInformationService) { }
 
@@ -18,7 +18,7 @@ export class RepresentativeInformationController {
       maxCount: 2
     }
   ])
-  async create(@Query('restaurantId') restaurantId: string, @Body() createRepresentativeInformationDto: CreateRepresentativeInformationDto):Promise<RepresentativeInformation> {
+  async create(@Query('restaurantId') restaurantId: string, @Body() createRepresentativeInformationDto: CreateRepresentativeInformationDto): Promise<RepresentativeInformation> {
     return await this.representativeInformationService.create(createRepresentativeInformationDto);
   }
 
