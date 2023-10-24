@@ -1,14 +1,12 @@
 import { DateTimeEntity } from "src/common/entities/DateTime.entity";
 import { Location } from "src/common/interface/locations";
 import { Role } from "src/roles/entities/role.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class User extends DateTimeEntity {
-    @PrimaryGeneratedColumn('uuid')
-    id: string;
 
-    @Column()
+    @PrimaryColumn()
     uid: string;
 
     @Column({
@@ -40,7 +38,7 @@ export class User extends DateTimeEntity {
         type: 'jsonb',
         nullable: true
     })
-    locations: Location[]
+    location: Location
 
     @Column({
         type: 'jsonb',
@@ -49,7 +47,7 @@ export class User extends DateTimeEntity {
 
     firebase: object;
 
-    @ManyToOne(() => Role, role => role.users, { onDelete: 'SET NULL' })
+    @ManyToOne(() => Role, role => role.users, { eager: true, nullable: true, onDelete: "SET NULL", onUpdate: "CASCADE" })
     role: Role
 
     // @ManyToOne()

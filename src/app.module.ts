@@ -8,9 +8,25 @@ import { FirebaseModule } from './firebase/firebase.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { RolesModule } from './roles/roles.module';
-import { CategoryModule } from './category/category.module';
-import { CategoryDetailsModule } from './category-details/category-details.module';
-import { CategoryTypeModule } from './category-type/category-type.module';
+import { RestaurantModule } from './restaurant/restaurant.module';
+import { ProductModule } from './product/product.module';
+import { ReviewsModule } from './reviews/reviews.module';
+import { MenusModule } from './menus/menus.module';
+import { ContractModule } from './contract/contract.module';
+import { OrdersModule } from './orders/orders.module';
+import { LobbyModule } from './lobby/lobby.module';
+import { StorageModule } from './storage/storage.module';
+import { BusinessModelModule } from './business-model/business-model.module';
+import { ProvinceModule } from './province/province.module';
+import { DistrictModule } from './district/district.module';
+import { WardModule } from './ward/ward.module';
+import { AdministrativeUnitModule } from './administrative-unit/administrative-unit.module';
+import { AdministrativeRegionModule } from './administrative-region/administrative-region.module';
+import { RepresentativeInformationModule } from './representative-information/representative-information.module';
+import { DetailInformationModule } from './detail-information/detail-information.module';
+import { TypeOfServiceModule } from './type-of-service/type-of-service.module';
+import { CategoriesModule } from './categories/categories.module';
+import { CategoryDetailModule } from './category-detail/category-detail.module';
 
 
 @Module({
@@ -25,9 +41,25 @@ import { CategoryTypeModule } from './category-type/category-type.module';
     AuthModule,
     UsersModule,
     RolesModule,
-    CategoryModule,
-    CategoryDetailsModule,
-    CategoryTypeModule
+    RestaurantModule,
+    ProductModule,
+    ReviewsModule,
+    MenusModule,
+    ContractModule,
+    OrdersModule,
+    LobbyModule,
+    StorageModule,
+    BusinessModelModule,
+    ProvinceModule,
+    DistrictModule,
+    WardModule,
+    AdministrativeUnitModule,
+    AdministrativeRegionModule,
+    RepresentativeInformationModule,
+    DetailInformationModule,
+    TypeOfServiceModule,
+    CategoriesModule,
+    CategoryDetailModule
   ],
   controllers: [AppController],
   providers: [AppService],

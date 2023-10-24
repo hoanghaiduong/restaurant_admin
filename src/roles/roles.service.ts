@@ -9,6 +9,8 @@ import { Pagination } from 'src/common/pagination/pagination.dto';
 import { PaginationModel } from 'src/common/pagination/pagination.model';
 import { Meta } from 'src/common/pagination/meta.dto';
 
+type findOneRoleWith = "user" | "admin" | "restaurant"
+
 @Injectable()
 export class RolesService implements OnModuleInit {
   constructor(@InjectRepository(Role) private roleRepository: Repository<Role>) {
@@ -16,8 +18,6 @@ export class RolesService implements OnModuleInit {
   }
   async onModuleInit(): Promise<any> {
     const roleNamesToCreate = ['admin', 'restaurant', 'user'];
-
-    // Tạo một mảng các promise cho việc kiểm tra và tạo role
     const roleCreationPromises = roleNamesToCreate.map(async (roleName) => {
       const existingRole = await this.roleRepository.findOne({
         where: { name: roleName }
@@ -44,11 +44,14 @@ export class RolesService implements OnModuleInit {
       })
     }
   }
+
   async findAll(pagination: Pagination): Promise<PaginationModel<Role>> {
     const [entities, itemCount] = await this.roleRepository.findAndCount({
       where: {
-        name: ILike(`%${pagination.search}%`)
-      }
+        name: pagination.search ? ILike(`%${pagination.search}%`) : null
+      },
+      skip: pagination.skip,
+      take: pagination.take
     });
 
     const meta = new Meta({ pagination, itemCount });
@@ -58,13 +61,21 @@ export class RolesService implements OnModuleInit {
   async findOne(id: string): Promise<Role> {
     const role = await this.roleRepository.findOne({
       where: {
-        id
+        id: id
       }
     })
     if (!role) throw new NotFoundException('Role not found')
     return role
   }
-
+  async findOneByName(name: findOneRoleWith): Promise<Role> {
+    const role = await this.roleRepository.findOne({
+      where: {
+        name
+      }
+    })
+    if (!role) throw new NotFoundException('Role not found')
+    return role
+  }
   async update(id: string, updateRoleDto: UpdateRoleDto): Promise<Role> {
     try {
       const role = await this.findOne(id);

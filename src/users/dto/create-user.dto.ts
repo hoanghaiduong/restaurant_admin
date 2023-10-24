@@ -1,4 +1,5 @@
 import { Location } from "src/common/interface/locations";
+import { Role } from "src/roles/entities/role.entity";
 
 export class CreateUserDto {
     email: string;
@@ -7,5 +8,6 @@ export class CreateUserDto {
     firebase: object;
     uid: string;
     displayName: string;
-    locations?: Location[]
+    locations?: Location[];
+    role: Role;
 }

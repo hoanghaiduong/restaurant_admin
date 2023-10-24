@@ -1,4 +1,4 @@
-import { IsNumber, IsObject, ValidateNested, IsInt } from 'class-validator';
+import { IsNumber, IsInt } from 'class-validator';
 export class Location {
     @IsNumber()
     lat: number;
@@ -9,5 +9,5 @@ export class Location {
     @IsInt({
         message: "The location point is not a number required integer",
     })
-    point: number;
+    point?: number;
 }

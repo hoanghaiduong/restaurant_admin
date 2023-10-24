@@ -1,13 +1,23 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException, UseGuards } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
+import { Pagination } from 'src/common/pagination/pagination.dto';
+import { PaginationModel } from 'src/common/pagination/pagination.model';
+import { Meta } from 'src/common/pagination/meta.dto';
+import { RolesService } from 'src/roles/roles.service';
+import { StorageService } from 'src/storage/storage.service';
+import { ImageTypes } from 'src/common/enum/file';
 
 @Injectable()
+
 export class UsersService {
-  constructor(@InjectRepository(User) private userRepository: Repository<User>) {
+  constructor(@InjectRepository(User) private userRepository: Repository<User>,
+    private readonly roleService: RolesService,
+    private readonly storageService: StorageService
+  ) {
 
   }
   async create(createUserDto: CreateUserDto): Promise<User> {
@@ -19,10 +29,29 @@ export class UsersService {
     }
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async findAll(pagination: Pagination): Promise<PaginationModel<User>> {
+    const [entities, itemCount] = await this.userRepository.findAndCount({
+      take: pagination.take,
+      skip: pagination.skip,
+      order: {
+        createdAt: pagination.order
+      },
+      relations: ["role"],
+      where: {
+        displayName: pagination.search ? ILike(`%${pagination.search}%`) : null
+      }
+    });
+    const meta = new Meta({ pagination, itemCount });
+    return new PaginationModel<User>(entities, meta);
   }
 
+  async findOne(uid: string): Promise<User> {
+    const user = await this.userRepository.findOne({
+      where: { uid }
+    })
+    if (!user) throw new NotFoundException(`User ${uid} not found`);
+    return user;
+  }
   async findOneUserExists(uid: string): Promise<User | boolean> {
     const user = await this.userRepository.findOne({
       where: {
@@ -33,9 +62,38 @@ export class UsersService {
     return user;//return user if user exists
   }
 
-  // update(id: number, updateUserDto: UpdateUserDto) {
-  //   return `This action updates a #${id} user`;
-  // }
+
+  async update(uid: string, updateUserDto: UpdateUserDto): Promise<User | any> {
+    const user = await this.findOne(uid);
+    const role = await this.roleService.findOne(updateUserDto.roleId);
+    let merged: User;
+    let photoURL: string;
+    if (!updateUserDto.photoURL) {
+      photoURL = user.photoURL;
+    }
+    else {
+      await this.storageService.deleteFile(user.photoURL);
+      photoURL = await this.storageService.uploadFile(ImageTypes.CARD_USER, updateUserDto.photoURL);
+    }
+
+    if (user.role.name === "admin") {
+      merged = this.userRepository.merge(user, {
+        ...updateUserDto,
+        photoURL,
+        role,
+      })
+
+    }
+    merged = this.userRepository.merge(user, {
+      ...updateUserDto,
+      photoURL,
+    })
+    await this.userRepository.update(uid,merged);
+
+    return await this.findOne(uid);
+
+  }
+
 
   // remove(id: number) {
   //   return `This action removes a #${id} user`;
