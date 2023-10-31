@@ -29,6 +29,17 @@ export class UsersService {
     }
   }
 
+  async grantAccess(uid: string): Promise<User> {
+    try {
+      const user = await this.findOne(uid);
+      const role = await this.roleService.findOneByName('admin');
+      user.role = role;
+      return await this.userRepository.save(user);
+    } catch (error) {
+      throw new BadRequestException("Error requesting access to user ");
+    }
+  }
+
   async findAll(pagination: Pagination): Promise<PaginationModel<User>> {
     const [entities, itemCount] = await this.userRepository.findAndCount({
       take: pagination.take,
@@ -88,7 +99,7 @@ export class UsersService {
       ...updateUserDto,
       photoURL,
     })
-    await this.userRepository.update(uid,merged);
+    await this.userRepository.update(uid, merged);
 
     return await this.findOne(uid);
 

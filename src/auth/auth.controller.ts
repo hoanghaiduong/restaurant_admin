@@ -9,7 +9,7 @@ import { Roles } from 'src/common/decorators/roles.decorator';
 
 @Controller('auth')
 @ApiTags('Auth API')
-@UseGuards(RoleGuard)
+@UseGuards(FirebaseAuthGuard)
 export class AuthController {
   constructor(private readonly authService: AuthService) { }
 
@@ -17,7 +17,7 @@ export class AuthController {
   async SignUp(@Req() req) {
     return await this.authService.auth(req.user);
   }
-
+  
   @Post('test')
   @Roles('user')
   async test(@Req() req) {

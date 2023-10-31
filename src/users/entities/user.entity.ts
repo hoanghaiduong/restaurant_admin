@@ -47,6 +47,12 @@ export class User extends DateTimeEntity {
 
     firebase: object;
 
+    @Column({
+        nullable: false,
+        type: 'integer',
+        default: 0
+    })
+    statusGranted: number;
     @ManyToOne(() => Role, role => role.users, { eager: true, nullable: true, onDelete: "SET NULL", onUpdate: "CASCADE" })
     role: Role
 
