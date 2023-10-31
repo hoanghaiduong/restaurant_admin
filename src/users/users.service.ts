@@ -10,6 +10,7 @@ import { Meta } from 'src/common/pagination/meta.dto';
 import { RolesService } from 'src/roles/roles.service';
 import { StorageService } from 'src/storage/storage.service';
 import { ImageTypes } from 'src/common/enum/file';
+import { Role } from 'src/roles/entities/role.entity';
 
 @Injectable()
 
@@ -76,14 +77,23 @@ export class UsersService {
 
   async update(uid: string, updateUserDto: UpdateUserDto): Promise<User | any> {
     const user = await this.findOne(uid);
-    const role = await this.roleService.findOne(updateUserDto.roleId);
+    let role: Role;
+    if (updateUserDto.roleId) {
+      role = await this.roleService.findOne(updateUserDto.roleId);
+    }
+
     let merged: User;
     let photoURL: string;
     if (!updateUserDto.photoURL) {
       photoURL = user.photoURL;
     }
     else {
-      await this.storageService.deleteFile(user.photoURL);
+      if (user.photoURL !== null) {
+        console.log(user.photoURL)
+        await this.storageService.deleteFile(user.photoURL);
+      }
+
+
       photoURL = await this.storageService.uploadFile(ImageTypes.CARD_USER, updateUserDto.photoURL);
     }
 
@@ -93,11 +103,12 @@ export class UsersService {
         photoURL,
         role,
       })
-
+      console.log("Admin updated role")
     }
     merged = this.userRepository.merge(user, {
       ...updateUserDto,
       photoURL,
+      role: updateUserDto.roleId ? role : user.role
     })
     await this.userRepository.update(uid, merged);
 
