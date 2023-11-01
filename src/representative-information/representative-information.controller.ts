@@ -22,14 +22,14 @@ export class RepresentativeInformationController {
     return await this.representativeInformationService.create(createRepresentativeInformationDto);
   }
 
-  @Get()
-  findAll() {
+  @Get('gets')
+  async findAll() {
     return this.representativeInformationService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.representativeInformationService.findOne(+id);
+  @Get('get')
+  async findOne(@Query('id') id: string) {
+    return await this.representativeInformationService.findOne(id);
   }
 
   @Patch(':id')

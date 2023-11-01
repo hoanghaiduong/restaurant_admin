@@ -13,8 +13,8 @@ export class RepresentativeInformationService {
     return `This action returns all representativeInformation`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} representativeInformation`;
+ async findOne(id: string) :Promise<RepresentativeInformation> {
+  return;
   }
 
   update(id: number, updateRepresentativeInformationDto: UpdateRepresentativeInformationDto) {

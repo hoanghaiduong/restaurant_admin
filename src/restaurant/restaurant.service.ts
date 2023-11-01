@@ -1,26 +1,52 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
 import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
+import { Restaurant } from './entities/restaurant.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { RepresentativeInformationService } from 'src/representative-information/representative-information.service';
+import { BusinessModelService } from 'src/business-model/business-model.service';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class RestaurantService {
-  create(createRestaurantDto: CreateRestaurantDto) {
-    return 'This action adds a new restaurant';
+  constructor(@InjectRepository(Restaurant) private restaurantRepository: Repository<Restaurant>,
+    private businessModelService: BusinessModelService,
+    private userService: UsersService,
+
+  ) {
+
+  }
+  async create(createRestaurantDto: CreateRestaurantDto): Promise<Restaurant> {
+    try {
+      const businessModel = await this.businessModelService.findOne(createRestaurantDto.businessModelId);
+      const user = await this.userService.findOne(createRestaurantDto.userUid);
+      const create = this.restaurantRepository.create({
+        ...createRestaurantDto,
+        businessModel,
+        user
+      });
+      return await this.restaurantRepository.save(create);
+    } catch (error) {
+      throw new BadRequestException({
+        message: error.message,
+      })
+    }
   }
 
-  findAll() {
+  async findAll() {
     return `This action returns all restaurant`;
   }
 
-  findOne(id: number) {
+  async findOne(id: number) {
     return `This action returns a #${id} restaurant`;
   }
 
-  update(id: number, updateRestaurantDto: UpdateRestaurantDto) {
+  async update(id: number, updateRestaurantDto: UpdateRestaurantDto) {
     return `This action updates a #${id} restaurant`;
   }
 
-  remove(id: number) {
+  async remove(id: number) {
     return `This action removes a #${id} restaurant`;
   }
 }

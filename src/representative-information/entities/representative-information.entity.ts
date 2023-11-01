@@ -74,7 +74,7 @@ export class RepresentativeInformation {
         }
     }
 
-    @OneToOne(() => Restaurant, restaurant => restaurant.prepresentativeInformation, { nullable: false })
+    @OneToOne(() => Restaurant, restaurant => restaurant.representativeInformation, { nullable: false })
     restaurant: Restaurant;
 
 }

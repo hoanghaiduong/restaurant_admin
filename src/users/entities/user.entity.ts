@@ -1,7 +1,8 @@
 import { DateTimeEntity } from "src/common/entities/DateTime.entity";
 import { Location } from "src/common/interface/locations";
+import { Restaurant } from "src/restaurant/entities/restaurant.entity";
 import { Role } from "src/roles/entities/role.entity";
-import { Column, Entity, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class User extends DateTimeEntity {
@@ -56,6 +57,9 @@ export class User extends DateTimeEntity {
     @ManyToOne(() => Role, role => role.users, { eager: true, nullable: true, onDelete: "SET NULL", onUpdate: "CASCADE" })
     role: Role
 
+
+    @OneToMany(() => Restaurant, restaurant => restaurant.user)
+    restaurants: Restaurant[]
     // @ManyToOne()
     //providerId
 }
