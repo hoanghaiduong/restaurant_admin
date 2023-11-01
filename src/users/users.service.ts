@@ -56,6 +56,7 @@ export class UsersService {
     const meta = new Meta({ pagination, itemCount });
     return new PaginationModel<User>(entities, meta);
   }
+  
 
   async findOne(uid: string): Promise<User> {
     const user = await this.userRepository.findOne({

@@ -34,7 +34,11 @@ export class RestaurantController {
  async findOne(@Query('id') id: string) :Promise<Restaurant> {
     return await this.restaurantService.findOne(id);
   }
-
+  @Roles('restaurant','admin')
+  @Get('getRestaurantsByUser')
+  async findRestaurantsByUser(@Req() req,@Query() pagination:Pagination) :Promise<PaginationModel<Restaurant>> {
+     return await this.restaurantService.getListRestaurantByUser(req.uid,pagination);
+   }
   @Patch('update')
  async update(@Query('id') id: string, @Body() updateRestaurantDto: UpdateRestaurantDto) :Promise<Restaurant> {
     return await this.restaurantService.update(id, updateRestaurantDto);
