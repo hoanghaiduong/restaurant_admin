@@ -22,33 +22,56 @@ export class StorageService implements OnModuleInit {
         }
     }
 
-    private async uploadStorage(type: ImageTypes, file: Express.Multer.File): Promise<string> {
-        const patch = this.configService.get<string>("FOLDER_UPLOAD");
-        switch (file.mimetype) {
-            case 'image/jpeg':
-            case 'image/png':
-                // Xử lý cho các loại hình ảnh JPEG và PNG
-                const imageName = await this.buildImageFileName(type, file);
-                const imagePath = await this.buildImageFilePath(type, imageName);
-                await sharp(file.buffer).toFile(imagePath);
+    // private async uploadStorage(type: ImageTypes | string, file: Express.Multer.File): Promise<string> {
+    //     const patch = this.configService.get<string>("FOLDER_UPLOAD");
+    //     switch (file.mimetype) {
+    //         case 'image/jpeg':
+    //         case 'image/png':
+    //             // Xử lý cho các loại hình ảnh JPEG và PNG
+    //             const imageName = await this.buildImageFileName(type, file);
+    //             const imagePath = await this.buildImageFilePath(type, imageName);
+    //             await sharp(file.buffer).toFile(imagePath);
 
 
-                return imagePath.replace(/\\/g, '/').replace(patch, '/uploads/');
-            default:
+    //             return imagePath.replace(/\\/g, '/').replace(patch, '/uploads/');
+    //         default:
 
-                // Xử lý cho các trường hợp mimetype không rơi vào các trường hợp trên
-                const fileName = await this.buildOtherFileName(type, file.filename)
-                const filePath = await this.buildImageFilePath(type, fileName);
-                await sharp(filePath).toFile(filePath)
-                return filePath.replace(/\\/g, '/').replace(patch, '/uploads/');
+    //             // Xử lý cho các trường hợp mimetype không rơi vào các trường hợp trên
+    //             const fileName = await this.buildOtherFileName(type, file.filename)
+    //             const filePath = await this.buildImageFilePath(type, fileName);
+    //             await sharp(filePath).toFile(filePath)
+    //             return filePath.replace(/\\/g, '/').replace(patch, '/uploads/');
+    //     }
+
+    // }
+    private async uploadStorage(type: ImageTypes | string, file: Express.Multer.File): Promise<string> {
+        const baseUploadPath = join('public', 'uploads');
+
+        // Kiểm tra xem thư mục gốc đã tồn tại chưa
+        if (!fs.existsSync(baseUploadPath)) {
+            // Nếu chưa có, tạo thư mục
+            fs.mkdirSync(baseUploadPath, { recursive: true });
         }
 
+        // Tạo thư mục con dựa trên type
+        const subDirectory = type.split('/').join('/');
+        const subUploadPath = join(baseUploadPath, subDirectory);
+        if (!fs.existsSync(subUploadPath)) {
+            fs.mkdirSync(subUploadPath, { recursive: true });
+        }
+
+        const imageName = await this.buildImageFileName(type, file);
+        const imagePath = await this.buildImageFilePath(type, imageName);
+        await sharp(file.buffer).toFile(imagePath);
+
+        return imagePath.replace(/\\/g, '/').replace(/public/, '/uploads');
     }
+
     async uploadFile(type: ImageTypes, file: Express.Multer.File): Promise<string> {
         return this.uploadStorage(type, file);
     }
 
-    async uploadMultiFiles(type: ImageTypes, files: Express.Multer.File[]): Promise<string[]> {
+    async uploadMultiFiles(type: ImageTypes | string, files: Express.Multer.File[]): Promise<string[]> {
         return Promise.all(files.map((file) => this.uploadStorage(type, file)));
     }
 
@@ -60,16 +83,19 @@ export class StorageService implements OnModuleInit {
     }
 
 
-    private async buildImageFileName(type: ImageTypes, file: Express.Multer.File): Promise<string> {
+
+    private async buildImageFileName(type: ImageTypes | string, file: Express.Multer.File): Promise<string> {
         const extension = file.originalname.split('.').pop(); // Extract extension
-        return `${type}.${StringUtil.generateRandomString(12)}.${Date.now()}.${extension}`;
+        const safeType = type.replace(/[\\/]/g, '_'); // Thay thế cả \ và / bằng _
+        return `${safeType}.${StringUtil.generateRandomString(12)}.${Date.now()}.${extension}`;
     }
-    private async buildOtherFileName(type: ImageTypes, fileName: string) {
+
+    private async buildOtherFileName(type: ImageTypes | string, fileName: string) {
         const extension = fileName.split('.').pop();
         return `${type}.${StringUtil.generateRandomString(12)}.${Date.now()}.${extension}`;
 
     }
-    private async buildImageFilePath(type: ImageTypes, fileName: string): Promise<string> {
+    private async buildImageFilePath(type: ImageTypes | string, fileName: string): Promise<string> {
         const patch = this.configService.get<string>("FOLDER_UPLOAD");
         const path = join('.', patch, type);
         if (!fs.existsSync(path)) {

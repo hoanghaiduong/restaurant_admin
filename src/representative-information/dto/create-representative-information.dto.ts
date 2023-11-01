@@ -20,6 +20,7 @@ export class CreateRepresentativeInformationDto {
         type: 'string',
         format: 'binary',
         isArray: true,
+        nullable: false
     })
     idCard: Express.Multer.File[];
 
@@ -27,6 +28,7 @@ export class CreateRepresentativeInformationDto {
         type: 'string',
         format: 'binary',
         isArray: true,
+        nullable: true
     })
     businessRegImages: Express.Multer.File[];
 
@@ -37,6 +39,7 @@ export class CreateRepresentativeInformationDto {
         type: 'string',
         format: 'binary',
         isArray: true,
+        nullable: false
     })
     taxCodeImages: Express.Multer.File[];
 
@@ -44,6 +47,7 @@ export class CreateRepresentativeInformationDto {
         type: 'string',
         format: 'binary',
         isArray: true,
+        nullable: true
     })
     relatedImages: Express.Multer.File[];
 
