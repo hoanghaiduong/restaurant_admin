@@ -7,9 +7,13 @@ import { CategoryDetail } from './entities/category-detail.entity';
 import { ApiTags } from '@nestjs/swagger';
 
 @Controller('category-detail')
-@ApiTags("API Danh mục")
+@ApiTags("API Danh mục con")
 export class CategoryDetailController extends BaseController<CategoryDetail>{
   constructor(private readonly categoryDetailService: CategoryDetailService) {
     super(categoryDetailService)
+  }
+  @Post('create')
+  async create(@Body() createDto: CreateCategoryDetailDto): Promise<CategoryDetail> {
+    return await this.categoryDetailService.create(createDto);
   }
 }

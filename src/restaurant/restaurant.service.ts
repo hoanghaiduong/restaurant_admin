@@ -1,12 +1,16 @@
-import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
 import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
 import { Restaurant } from './entities/restaurant.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import { RepresentativeInformationService } from 'src/representative-information/representative-information.service';
 import { BusinessModelService } from 'src/business-model/business-model.service';
 import { UsersService } from 'src/users/users.service';
+import { PaginationModel } from 'src/common/pagination/pagination.model';
+import { Pagination } from 'src/common/pagination/pagination.dto';
+import { Meta } from 'src/common/pagination/meta.dto';
+import { Response, response } from 'express';
 
 @Injectable()
 export class RestaurantService {
@@ -34,19 +38,50 @@ export class RestaurantService {
     }
   }
 
-  async findAll() {
-    return `This action returns all restaurant`;
+  async findAll(pagination: Pagination): Promise<PaginationModel<Restaurant>> {
+    try {
+      const [entities, itemCount] = await this.restaurantRepository.findAndCount({
+        take: pagination.take,
+        skip: pagination.skip,
+        where: {
+          name: pagination.search ? ILike(`%${pagination.search}%`) : null
+        },
+        order: {
+          name: pagination.order
+        },
+      });
+      const meta = new Meta({ pagination, itemCount });
+      return new PaginationModel<Restaurant>(entities, meta);
+    } catch (error) {
+      throw new BadRequestException({
+        message: error.message
+      })
+    }
   }
 
-  async findOne(id: number) {
-    return `This action returns a #${id} restaurant`;
+  async findOne(id: string): Promise<Restaurant> {
+    const restaurant = await this.restaurantRepository.findOne({
+      where: { id }
+    })
+    if (!restaurant) throw new NotFoundException({
+      message: 'No restaurant found'
+    })
+    return restaurant;
   }
 
-  async update(id: number, updateRestaurantDto: UpdateRestaurantDto) {
-    return `This action updates a #${id} restaurant`;
+  async update(id: string, updateRestaurantDto: UpdateRestaurantDto): Promise<Restaurant> {
+    const restaurant = await this.findOne(id);
+    return await this.restaurantRepository.save({
+      ...restaurant,
+      ...updateRestaurantDto
+    })
   }
 
-  async remove(id: number) {
-    return `This action removes a #${id} restaurant`;
+  async remove(id: string): Promise<Response> {
+    const restaurant = await this.findOne(id);
+    await this.restaurantRepository.remove(restaurant);
+    return response.status(200).json({
+      message: 'Delete was successful'
+    });
   }
 }

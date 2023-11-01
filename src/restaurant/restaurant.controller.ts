@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Req, Query } from '@nestjs/common';
 import { RestaurantService } from './restaurant.service';
 import { CreateRestaurantDto } from './dto/create-restaurant.dto';
 import { UpdateRestaurantDto } from './dto/update-restaurant.dto';
@@ -6,6 +6,9 @@ import { ApiTags } from '@nestjs/swagger';
 import { Restaurant } from './entities/restaurant.entity';
 import { RoleGuard } from 'src/auth/guard/Role.guard';
 import { Roles } from 'src/common/decorators/roles.decorator';
+import { Pagination } from 'src/common/pagination/pagination.dto';
+import { PaginationModel } from 'src/common/pagination/pagination.model';
+import { Response } from 'express';
 
 @Controller('restaurant')
 @ApiTags("API Nhà hàng")
@@ -22,23 +25,23 @@ export class RestaurantController {
     });
   }
 
-  @Get()
-  findAll() {
-    return this.restaurantService.findAll();
+  @Get('gets')
+  async findAll(@Query() pagination: Pagination): Promise<PaginationModel<Restaurant>> {
+    return await this.restaurantService.findAll(pagination);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.restaurantService.findOne(+id);
+  @Get('get')
+ async findOne(@Query('id') id: string) :Promise<Restaurant> {
+    return await this.restaurantService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRestaurantDto: UpdateRestaurantDto) {
-    return this.restaurantService.update(+id, updateRestaurantDto);
+  @Patch('update')
+ async update(@Query('id') id: string, @Body() updateRestaurantDto: UpdateRestaurantDto) :Promise<Restaurant> {
+    return await this.restaurantService.update(id, updateRestaurantDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.restaurantService.remove(+id);
+  @Delete('delete')
+ async remove(@Query('id') id: string) :Promise<Response> {
+    return await this.restaurantService.remove(id);
   }
 }

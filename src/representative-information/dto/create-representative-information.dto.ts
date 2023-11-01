@@ -28,7 +28,7 @@ export class CreateRepresentativeInformationDto {
         format: 'binary',
         isArray: true,
     })
-    businessRegImages:  Express.Multer.File[];
+    businessRegImages: Express.Multer.File[];
 
     @ApiProperty({ example: '123456789' })
     taxCode: string;
@@ -55,4 +55,5 @@ export class CreateRepresentativeInformationDto {
 
     @ApiProperty({ example: 'Jane Smith' })
     fullNameOfRepresentative: string;
+
 }

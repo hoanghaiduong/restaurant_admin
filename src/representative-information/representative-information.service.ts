@@ -5,7 +5,7 @@ import { RepresentativeInformation } from './entities/representative-information
 
 @Injectable()
 export class RepresentativeInformationService {
-  async create(createRepresentativeInformationDto: CreateRepresentativeInformationDto): Promise<RepresentativeInformation> {
+  async create(restaurantId:string,createRepresentativeInformationDto: CreateRepresentativeInformationDto): Promise<RepresentativeInformation> {
     return;
   }
 
