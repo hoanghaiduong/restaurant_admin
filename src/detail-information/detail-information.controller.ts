@@ -35,12 +35,13 @@ export class DetailInformationController {
     coverImage: Express.Multer.File,
     facadeImage: Express.Multer.File,
     menuImages: Express.Multer.File[]
-  }): Promise<DetailInformation> {
+  }): Promise<DetailInformation|any> {
+    
     return await this.detailInformationService.create({
       ...createDetailInformationDto,
-      avatar: files.avatar,
-      coverImage:files.coverImage,
-      facadeImage:files.facadeImage,
+      avatar: files?.avatar[0],
+      coverImage:files?.coverImage[0],
+      facadeImage:files?.facadeImage[0],
       menuImages:files.menuImages
     });
   }

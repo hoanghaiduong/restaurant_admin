@@ -12,11 +12,13 @@ import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { Role } from 'src/roles/entities/role.entity';
 import { RolesService } from 'src/roles/roles.service';
+import { TypeOfServiceService } from 'src/type-of-service/type-of-service.service';
+import { TypeOfService } from 'src/type-of-service/entities/type-of-service.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([DetailInformation, Restaurant, BusinessModel, User, Role])],
+  imports: [TypeOrmModule.forFeature([DetailInformation, Restaurant, BusinessModel, User, Role,TypeOfService])],
   controllers: [DetailInformationController],
-  providers: [DetailInformationService, RestaurantService, StorageService, BusinessModelService, UsersService, RolesService],
+  providers: [DetailInformationService, RestaurantService, StorageService, BusinessModelService, UsersService, RolesService,TypeOfServiceService],
   exports: [DetailInformationService]
 })
 export class DetailInformationModule { }

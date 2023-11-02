@@ -45,11 +45,12 @@ export class Restaurant extends DateTimeEntity{
     location: Location
 
     @Column({
-        nullable: true,
-        default: false
+        nullable: false,
+        type: 'integer',
+        default: 0
     })
-    verified: boolean
-
+    statusGranted: number;
+    
     @Column({
         nullable: true,
         default: false

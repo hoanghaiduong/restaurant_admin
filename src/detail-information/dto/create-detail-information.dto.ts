@@ -4,6 +4,8 @@ import { DaySchedule } from "src/common/interface/Open-closeTime";
 export class CreateDetailInformationDto {
 
 
+    @ApiProperty({ nullable: false }) // Một ví dụ cho mối quan hệ một-đến-một
+    restaurantId: string;
     @ApiProperty({ example: { isOpen: true, timeSlots: [{ morning: '08:00-9:00', afternoon: '12:00-13:00', evening: '12:00-13:00' }] } })
     sunday: DaySchedule;
 
@@ -54,12 +56,9 @@ export class CreateDetailInformationDto {
     menuImages: Express.Multer.File[];
 
     @ApiProperty({
-        isArray: true,
-        nullable: false
+        nullable: false,
     })
-    typeOfServiceIds: string
+    typeOfServiceIds: [];
 
 
-    @ApiProperty({ nullable: false }) // Một ví dụ cho mối quan hệ một-đến-một
-    restaurantId: string;
 }

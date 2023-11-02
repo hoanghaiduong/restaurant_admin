@@ -62,12 +62,17 @@ export class StorageService implements OnModuleInit {
 
         const imageName = await this.buildImageFileName(type, file);
         const imagePath = await this.buildImageFilePath(type, imageName);
-        await sharp(file.buffer).toFile(imagePath);
+        console.log(`Image ${imageName} uploaded to ${subUploadPath} with ${imagePath}`);
+        await sharp(file.buffer, {
+            limitInputPixels: false,
+            
+        }).toFile(imagePath);
 
         return imagePath.replace(/\\/g, '/').replace(/public/, '/uploads');
     }
 
-    async uploadFile(type: ImageTypes|string, file: Express.Multer.File): Promise<string> {
+    async uploadFile(type: ImageTypes | string, file: Express.Multer.File): Promise<string> {
+
         return this.uploadStorage(type, file);
     }
 

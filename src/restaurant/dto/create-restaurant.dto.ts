@@ -41,16 +41,19 @@ export class CreateRestaurantDto {
     location: Location;
 
     @ApiProperty({
-        nullable:false
+        nullable: false,
+        type: 'integer',
+        default: 0
     })
-    verified: boolean;
+    statusGranted: number;
+
     @ApiProperty({
-        nullable:false
+        nullable: false
     })
     disabled: boolean;
     @ApiProperty()
     @IsUUID()
     businessModelId: string;
 
-    userUid:string;
+    userUid: string;
 }

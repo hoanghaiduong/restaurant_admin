@@ -32,6 +32,8 @@ export const ApiMultipleFieldFiles = (
     UseInterceptors(FileFieldsInterceptor(fieldConfigs, {
       storage: memoryStorage(),
       preservePath: true,
+      limits: { fileSize: 1024 * 1024 * 10 },
+
     })),
     ApiConsumes("multipart/form-data")
   )
