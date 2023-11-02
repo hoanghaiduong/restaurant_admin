@@ -1,11 +1,13 @@
 import { BusinessModel } from "src/business-model/entities/business-model.entity";
+import { DateTimeEntity } from "src/common/entities/DateTime.entity";
 import { Location } from "src/common/interface/locations";
+import { DetailInformation } from "src/detail-information/entities/detail-information.entity";
 import { RepresentativeInformation } from "src/representative-information/entities/representative-information.entity";
 import { User } from "src/users/entities/user.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
-export class Restaurant {
+export class Restaurant extends DateTimeEntity{
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
@@ -61,5 +63,9 @@ export class Restaurant {
 
     @OneToOne(() => RepresentativeInformation, { nullable: true, eager: true })
     @JoinColumn()
-    representativeInformation: RepresentativeInformation
+    representativeInformation: RepresentativeInformation;
+
+    @OneToOne(() => DetailInformation, { nullable: true, eager: true })
+    @JoinColumn()
+    detailInformation: DetailInformation;
 }

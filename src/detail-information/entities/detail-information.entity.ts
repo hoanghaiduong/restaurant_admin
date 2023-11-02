@@ -1,7 +1,8 @@
 import { BusinessModel } from "src/business-model/entities/business-model.entity";
 import { DaySchedule, OpenCloseTime } from "src/common/interface/Open-closeTime";
+import { Restaurant } from "src/restaurant/entities/restaurant.entity";
 import { TypeOfService } from "src/type-of-service/entities/type-of-service.entity";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class DetailInformation {
@@ -45,19 +46,43 @@ export class DetailInformation {
     })
     descriptionS: string;
 
-    @Column()
+    @Column({
+        nullable: false
+    })
     avatar: string;
 
-    @Column()
+    @Column({
+        nullable: false
+    })
     coverImage: string;
 
-    @Column()
+    @Column({
+        nullable: false
+    })
     facadeImage: string;
 
+    @Column({
+        nullable: false,
+        array: true,
+        type: 'text'
+    })
+    menuImages: string[];
+
     //LOẠI HÌNH DỊCH VỤ
-    @OneToMany(() => TypeOfService, typeOfServices => typeOfServices)
-    typeOfSerivces: TypeOfService[];
-    
+    @ManyToMany(() => TypeOfService)
+    @JoinTable({
+        name: "detail_information_type_of_service", // Tùy chỉnh tên bảng liên kết nhiều-đến-nhiều
+        joinColumn: {
+            name: "detail_information_id",
+        },
+        inverseJoinColumn: {
+            name: "type_of_service_id",
+        },
+    })
+    typeOfServices: TypeOfService[];
+
+    @OneToOne(() => Restaurant, restaurant => restaurant.detailInformation, { nullable: false })
+    restaurant: Restaurant;
     //sản phẩm đặc trưng (đồ ăn/đồ uống)
     // featuredProducts:Produc
 }

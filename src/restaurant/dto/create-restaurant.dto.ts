@@ -40,9 +40,13 @@ export class CreateRestaurantDto {
     @IsObject()
     location: Location;
 
-    @ApiProperty()
+    @ApiProperty({
+        nullable:false
+    })
     verified: boolean;
-    @ApiProperty()
+    @ApiProperty({
+        nullable:false
+    })
     disabled: boolean;
     @ApiProperty()
     @IsUUID()

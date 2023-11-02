@@ -7,7 +7,7 @@ import { ApiMultipleFieldFiles } from 'src/common/decorators/file.decorator';
 import { RepresentativeInformation } from './entities/representative-information.entity';
 
 @Controller('representative-information')
-@ApiTags("API Đăng ký thông tin người đại diện thuộc nhà hàng (bước 1)")
+@ApiTags("API Đăng ký thông tin người đại diện thuộc nhà hàng (bước 2)")
 export class RepresentativeInformationController {
   constructor(private readonly representativeInformationService: RepresentativeInformationService) { }
 

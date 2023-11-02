@@ -11,7 +11,7 @@ import { PaginationModel } from 'src/common/pagination/pagination.model';
 import { Response } from 'express';
 
 @Controller('restaurant')
-@ApiTags("API Nhà hàng")
+@ApiTags("API Nhà hàng Bước 1")
 @UseGuards(RoleGuard)
 export class RestaurantController {
   constructor(private readonly restaurantService: RestaurantService) { }
@@ -31,21 +31,21 @@ export class RestaurantController {
   }
 
   @Get('get')
- async findOne(@Query('id') id: string) :Promise<Restaurant> {
+  async findOne(@Query('id') id: string): Promise<Restaurant> {
     return await this.restaurantService.findOne(id);
   }
-  @Roles('restaurant','admin')
+  @Roles('restaurant', 'admin')
   @Get('getRestaurantsByUser')
-  async findRestaurantsByUser(@Req() req,@Query() pagination:Pagination) :Promise<PaginationModel<Restaurant>> {
-     return await this.restaurantService.getListRestaurantByUser(req.uid,pagination);
-   }
+  async findRestaurantsByUser(@Req() req, @Query() pagination: Pagination): Promise<PaginationModel<Restaurant>> {
+    return await this.restaurantService.getListRestaurantByUser(req.uid, pagination);
+  }
   @Patch('update')
- async update(@Query('id') id: string, @Body() updateRestaurantDto: UpdateRestaurantDto) :Promise<Restaurant> {
+  async update(@Query('id') id: string, @Body() updateRestaurantDto: UpdateRestaurantDto): Promise<Restaurant> {
     return await this.restaurantService.update(id, updateRestaurantDto);
   }
 
   @Delete('delete')
- async remove(@Query('id') id: string) :Promise<Response> {
+  async remove(@Query('id') id: string): Promise<Response> {
     return await this.restaurantService.remove(id);
   }
 }

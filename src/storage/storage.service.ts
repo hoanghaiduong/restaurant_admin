@@ -67,7 +67,7 @@ export class StorageService implements OnModuleInit {
         return imagePath.replace(/\\/g, '/').replace(/public/, '/uploads');
     }
 
-    async uploadFile(type: ImageTypes, file: Express.Multer.File): Promise<string> {
+    async uploadFile(type: ImageTypes|string, file: Express.Multer.File): Promise<string> {
         return this.uploadStorage(type, file);
     }
 
