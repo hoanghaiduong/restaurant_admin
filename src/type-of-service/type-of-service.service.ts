@@ -29,21 +29,19 @@ export class TypeOfServiceService extends BaseService<TypeOfService> implements 
     await queryRunner.startTransaction();
 
     try {
-      
-     
-      // for (const id of ids) {
 
-      //   const typeOfService = await this.typeOfServiceRepository.findOne({
-      //     where: { id }
-      //   });
-      //   if (!typeOfService) {
-      //     await queryRunner.rollbackTransaction();
-      //     throw new BadRequestException(`Invalid type of service ID: ${id}`);
-      //   }
-      // }
+      for (const id of ids) {
+
+        const typeOfService = await this.typeOfServiceRepository.findOne({
+          where: { id }
+        });
+        if (!typeOfService) {
+          await queryRunner.rollbackTransaction();
+          throw new BadRequestException(`Invalid type of service ID: ${id}`);
+        }
+      }
 
       await queryRunner.commitTransaction();
-      // return this.typeOfServiceRepository.findByIds(["b4e1dd79-daa7-453d-9692-75505f7ebc54", "cc471068-1348-4841-8352-544f0acd673c"]);
       return this.typeOfServiceRepository.findByIds(ids);
     } catch (error) {
       await queryRunner.rollbackTransaction();

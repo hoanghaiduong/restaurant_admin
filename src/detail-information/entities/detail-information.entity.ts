@@ -44,7 +44,7 @@ export class DetailInformation {
         type: 'text',
         nullable: false
     })
-    descriptionS: string;
+    descriptions: string;
 
     @Column({
         nullable: false

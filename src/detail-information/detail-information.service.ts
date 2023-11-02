@@ -20,48 +20,52 @@ export class DetailInformationService {
 
   }
   async create(dto: CreateDetailInformationDto): Promise<DetailInformation | any> {
-    // try {
-    const restaurant = await this.restaurantService.findOne(dto.restaurantId);
-      const typeOfServices = await this.typeOfService.findByIds(dto.typeOfServiceIds as []);
-      return typeOfServices
-    //   const basePath = join('.', this.configService.get<string>('FOLDER_UPLOAD'));
-    //   const restaurantUploadPath = join(basePath, ImageTypes.CARD_RESTAURANT_DETAIL_INFORMATION);
-    //   if (!fs.existsSync(basePath)) {
-    //     fs.mkdirSync(basePath);
-    //   }
+    try {
+      const restaurant = await this.restaurantService.findOne(dto.restaurantId);
+      //const typeOfServices = await this.typeOfService.findByIds(JSON.parse(dto.typeOfServiceIds.toString()));
+      const test=JSON.stringify(dto.typeOfServiceIds)
+      if(typeof dto.typeOfServiceIds==="string")
+      return JSON.parse(test)
+      // const basePath = join('.', this.configService.get<string>('FOLDER_UPLOAD'));
+      // const restaurantUploadPath = join(basePath, ImageTypes.CARD_RESTAURANT_DETAIL_INFORMATION);
+      // if (!fs.existsSync(basePath)) {
+      //   fs.mkdirSync(basePath);
+      // }
 
-    //   if (!fs.existsSync(restaurantUploadPath)) {
-    //     fs.mkdirSync(restaurantUploadPath);
-    //   }
+      // if (!fs.existsSync(restaurantUploadPath)) {
+      //   fs.mkdirSync(restaurantUploadPath);
+      // }
 
-    //   let avatarPromise = this.storageService.uploadFile(`${ImageTypes.CARD_RESTAURANT_DETAIL_INFORMATION}/${ImageTypes.CARD_RESTAURANT_DETAIL_INFORMATION_AVATAR}`, dto.avatar);
+      // let avatarPromise = this.storageService.uploadFile(`${ImageTypes.CARD_RESTAURANT_DETAIL_INFORMATION}/${ImageTypes.CARD_RESTAURANT_DETAIL_INFORMATION_AVATAR}`, dto.avatar);
 
-    //   let coverImagePromise = this.storageService.uploadFile(`${ImageTypes.CARD_RESTAURANT_DETAIL_INFORMATION}/${ImageTypes.CARD_RESTAURANT_DETAIL_INFORMATION_COVER_IMAGE}`, dto.coverImage);
+      // let coverImagePromise = this.storageService.uploadFile(`${ImageTypes.CARD_RESTAURANT_DETAIL_INFORMATION}/${ImageTypes.CARD_RESTAURANT_DETAIL_INFORMATION_COVER_IMAGE}`, dto.coverImage);
 
-    //   let facadeImagePromise = this.storageService.uploadFile(`${ImageTypes.CARD_RESTAURANT_DETAIL_INFORMATION}/${ImageTypes.CARD_RESTAURANT_DETAIL_INFORMATION_FACADE_IMAGE}`, dto.facadeImage);
-    //   let menuImagesPromise = this.storageService.uploadMultiFiles(`${ImageTypes.CARD_RESTAURANT_DETAIL_INFORMATION}/${ImageTypes.CARD_RESTAURANT_DETAIL_INFORMATION_MENU_IMAGE}`, dto.menuImages);
+      // let facadeImagePromise = this.storageService.uploadFile(`${ImageTypes.CARD_RESTAURANT_DETAIL_INFORMATION}/${ImageTypes.CARD_RESTAURANT_DETAIL_INFORMATION_FACADE_IMAGE}`, dto.facadeImage);
+      // let menuImagesPromise = this.storageService.uploadMultiFiles(`${ImageTypes.CARD_RESTAURANT_DETAIL_INFORMATION}/${ImageTypes.CARD_RESTAURANT_DETAIL_INFORMATION_MENU_IMAGE}`, dto.menuImages);
 
 
-    //   const [avatar, coverImage, facadeImage, menuImages] = await Promise.all([
-    //     avatarPromise,
-    //     coverImagePromise,
-    //     facadeImagePromise,
-    //     menuImagesPromise
-    //   ]);
-    //   const creating = this.detailInformationRepository.create({
-    //     ...dto,
-    //     avatar,
-    //     coverImage,
-    //     facadeImage,
-    //     menuImages,
-    //     restaurant
-    //   });
-    //   return await this.detailInformationRepository.save(creating);
-    // } catch (error) {
-    //   throw new BadRequestException({
-    //     message: error.message
-    //   })
-    // }
+      // const [avatar, coverImage, facadeImage, menuImages] = await Promise.all([
+      //   avatarPromise,
+      //   coverImagePromise,
+      //   facadeImagePromise,
+      //   menuImagesPromise
+      // ]);
+      // const creating = this.detailInformationRepository.create({
+      //   ...dto,
+      //   avatar,
+      //   coverImage,
+      //   facadeImage,
+      //   menuImages,
+      //   restaurant,
+      //   typeOfServices
+      // });
+      // return await this.detailInformationRepository.save(creating);
+    } catch (error) {
+      throw new BadRequestException({
+        message: error.message
+      })
+    }
+
   }
 
   findAll() {

@@ -57,8 +57,9 @@ export class CreateDetailInformationDto {
 
     @ApiProperty({
         nullable: false,
+
     })
-    typeOfServiceIds: [];
+    typeOfServiceIds: string[];
 
 
 }
