@@ -11,27 +11,39 @@ export class DetailInformation {
 
     @Column({
         type: 'jsonb',
+        nullable: true,
+
     })
     sunday: DaySchedule;
 
     @Column({
         type: 'jsonb',
+        nullable: true
     })
     monday: DaySchedule;
     @Column({
         type: 'jsonb',
+        nullable: true
     })
     tuesday: DaySchedule;
     @Column({
         type: 'jsonb',
+        nullable: true
     })
     wednesday: DaySchedule;
     @Column({
         type: 'jsonb',
+        nullable: true
     })
     thursday: DaySchedule;
     @Column({
         type: 'jsonb',
+        nullable: true
+    })
+    friday: DaySchedule;
+    @Column({
+        type: 'jsonb',
+        nullable: true
     })
     saturday: DaySchedule;
 

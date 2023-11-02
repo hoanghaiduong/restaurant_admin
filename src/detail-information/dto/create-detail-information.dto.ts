@@ -20,6 +20,8 @@ export class CreateDetailInformationDto {
 
     @ApiProperty({ example: { isOpen: true, timeSlots: [{ morning: '08:00-9:00', afternoon: '12:00-13:00', evening: '12:00-13:00' }] } })
     thursday: DaySchedule;
+    @ApiProperty({ example: { isOpen: true, timeSlots: [{ morning: '08:00-9:00', afternoon: '12:00-13:00', evening: '12:00-13:00' }] } })
+    friday: DaySchedule;
 
     @ApiProperty({ example: { isOpen: true, timeSlots: [{ morning: '08:00-9:00', afternoon: '12:00-13:00', evening: '12:00-13:00' }] } })
     saturday: DaySchedule;
