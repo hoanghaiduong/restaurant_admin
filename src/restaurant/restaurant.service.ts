@@ -40,18 +40,21 @@ export class RestaurantService {
   async getListRestaurantByUser(uid: string, pagination: Pagination): Promise<PaginationModel<Restaurant> | any> {
     try {
       const queryBuilder = this.restaurantRepository.createQueryBuilder('restaurant')
-        .leftJoin('restaurant.user', 'user')
+        .leftJoinAndSelect('restaurant.user', 'user')
+        .leftJoinAndSelect('restaurant.detailInformation', 'detailInformation')
+        .leftJoinAndSelect('restaurant.representativeInformation', 'representativeInformation')
+        .leftJoinAndSelect('restaurant.businessModel', 'businessModel')
         .skip(pagination.skip)
         .take(pagination.take)
         .orderBy('restaurant.name', pagination.order)
-        .where('user.uid = :uid', { uid });  
+        .where('user.uid = :uid', { uid });
       if (pagination.search) {
         queryBuilder.andWhere('restaurant.name ILIKE :search', { search: `%${pagination.search}%` });
       }
-  
+
       const [entities, itemCount] = await queryBuilder.getManyAndCount();
       const meta = new Meta({ itemCount, pagination });
-  
+
       return new PaginationModel<Restaurant>(entities, meta);
     } catch (error) {
       throw new BadRequestException({
@@ -59,7 +62,7 @@ export class RestaurantService {
       });
     }
   }
-  
+
   async findAll(pagination: Pagination): Promise<PaginationModel<Restaurant>> {
     try {
       const [entities, itemCount] = await this.restaurantRepository.findAndCount({

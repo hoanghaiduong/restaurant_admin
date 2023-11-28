@@ -59,27 +59,21 @@ export class RepresentativeInformationService {
   //   }
   // }
   async create(restaurantId: string, dto: CreateRepresentativeInformationDto): Promise<RepresentativeInformation> {
+    const imagesToDelete: string[] = [];
     try {
+
       const restaurant = await this.restaurantService.findOne(restaurantId);
 
-      const basePath = join('.', this.configService.get<string>('FOLDER_UPLOAD'));
-      const restaurantUploadPath = join(basePath, ImageTypes.CARD_RESTAURANT);
+      const idCardPromise = this.storageService.uploadMultiFiles(`${restaurant.name}/${ImageTypes.CARD_RESTAURANT}/${ImageTypes.CARD_RESTAURANT_ID_CARD}`, dto.idCard);
 
-      if (!fs.existsSync(basePath)) {
-        fs.mkdirSync(basePath);
-      }
-
-      if (!fs.existsSync(restaurantUploadPath)) {
-        fs.mkdirSync(restaurantUploadPath);
-      }
-
-      const idCardPromise = this.storageService.uploadMultiFiles(`${ImageTypes.CARD_RESTAURANT}/${ImageTypes.CARD_RESTAURANT_ID_CARD}`, dto.idCard);
       const businessRegImagesPromise = dto.businessRegImages
-        ? this.storageService.uploadMultiFiles(`${ImageTypes.CARD_RESTAURANT}/${ImageTypes.CARD_RESTAURANT_BUSINESS_REGISTER}`, dto.businessRegImages)
+        ? this.storageService.uploadMultiFiles(`${restaurant.name}/${ImageTypes.CARD_RESTAURANT}/${ImageTypes.CARD_RESTAURANT_BUSINESS_REGISTER}`, dto.businessRegImages)
         : null;
-      const taxCodeImagesPromise = this.storageService.uploadMultiFiles(`${ImageTypes.CARD_RESTAURANT}/${ImageTypes.CARD_RESTAURANT_TAX_CODE}`, dto.taxCodeImages);
+
+      const taxCodeImagesPromise = this.storageService.uploadMultiFiles(`${restaurant.name}/${ImageTypes.CARD_RESTAURANT}/${ImageTypes.CARD_RESTAURANT_TAX_CODE}`, dto.taxCodeImages);
+
       const relatedImagesPromise = dto.relatedImages
-        ? this.storageService.uploadMultiFiles(`${ImageTypes.CARD_RESTAURANT}/${ImageTypes.CARD_RESTAURANT_RELATED}`, dto.relatedImages)
+        ? this.storageService.uploadMultiFiles(`${restaurant.name}/${ImageTypes.CARD_RESTAURANT}/${ImageTypes.CARD_RESTAURANT_RELATED}`, dto.relatedImages)
         : null;
 
       const [idCard, businessRegImages, taxCodeImages, relatedImages] = await Promise.all([
@@ -88,6 +82,7 @@ export class RepresentativeInformationService {
         taxCodeImagesPromise,
         relatedImagesPromise,
       ]);
+      imagesToDelete.push(...idCard, ...businessRegImages, ...taxCodeImages, ...relatedImages);
 
       const creating = this.representativeRepository.create({
         ...dto,
@@ -100,6 +95,7 @@ export class RepresentativeInformationService {
 
       return await this.representativeRepository.save(creating);
     } catch (error) {
+      await this.storageService.deleteMultiFiles(imagesToDelete)
       throw new BadRequestException({
         message: `Error while creating representation information for ${error.message}`,
         error: error.message,

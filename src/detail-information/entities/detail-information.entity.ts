@@ -1,8 +1,7 @@
-import { BusinessModel } from "src/business-model/entities/business-model.entity";
 import { DaySchedule, OpenCloseTime } from "src/common/interface/Open-closeTime";
 import { Restaurant } from "src/restaurant/entities/restaurant.entity";
 import { TypeOfService } from "src/type-of-service/entities/type-of-service.entity";
-import { Column, Entity, JoinTable, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToMany, OneToOne, PrimaryGeneratedColumn, Unique } from "typeorm";
 
 @Entity()
 export class DetailInformation {
@@ -94,7 +93,7 @@ export class DetailInformation {
     typeOfServices: TypeOfService[];
 
     @OneToOne(() => Restaurant, restaurant => restaurant.detailInformation, { nullable: false })
+    @JoinColumn()
     restaurant: Restaurant;
-    //sản phẩm đặc trưng (đồ ăn/đồ uống)
-    // featuredProducts:Produc
 }
+

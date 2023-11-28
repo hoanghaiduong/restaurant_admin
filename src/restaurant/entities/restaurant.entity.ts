@@ -4,10 +4,11 @@ import { Location } from "src/common/interface/locations";
 import { DetailInformation } from "src/detail-information/entities/detail-information.entity";
 import { RepresentativeInformation } from "src/representative-information/entities/representative-information.entity";
 import { User } from "src/users/entities/user.entity";
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn, Unique } from "typeorm";
 
 @Entity()
-export class Restaurant extends DateTimeEntity{
+
+export class Restaurant extends DateTimeEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
@@ -40,7 +41,8 @@ export class Restaurant extends DateTimeEntity{
     houseNumber: string;
 
     @Column({
-        type: 'jsonb'
+        type: 'jsonb',
+
     })
     location: Location
 
@@ -49,24 +51,51 @@ export class Restaurant extends DateTimeEntity{
         type: 'integer',
         default: 0
     })
-    statusGranted: number;
-    
+    statusGranted: number;//trạng thái đăng ký nhà hàng 0: chưa được chấp nhận, 1 là đã được chấp nhận, 2 là đang chờ xử lý
+
+    @Column({
+        nullable: true,
+        type: 'integer',
+        default: 0
+    })
+    progress: number
+
+
     @Column({
         nullable: true,
         default: false
     })
     disabled: boolean
-    @ManyToOne(() => BusinessModel)
+    @ManyToOne(() => BusinessModel, businessModels => businessModels.restaurants, { nullable: false })
     businessModel: BusinessModel;
 
     @ManyToOne(() => User, users => users.restaurants, { nullable: false })
     user: User;
 
-    @OneToOne(() => RepresentativeInformation, { nullable: true, eager: true })
-    @JoinColumn()
+    @OneToOne(() => RepresentativeInformation, representativeInformation => representativeInformation.restaurant, { nullable: true })
+
     representativeInformation: RepresentativeInformation;
 
-    @OneToOne(() => DetailInformation, { nullable: true, eager: true })
-    @JoinColumn()
+    @OneToOne(() => DetailInformation, detailInformation => detailInformation.restaurant, { nullable: true })
+
     detailInformation: DetailInformation;
+
+    @BeforeInsert()
+    @BeforeUpdate()
+    async checkStatusAndProgress(): Promise<void> {
+        // if (this.statusGranted === 1) {//nếu trạng thái đã được
+        //     this.progress = 100;
+        // }
+        // else if()
+
+        // else if (this.representativeInformation !== null && this.detailInformation !== null) {
+        //     this.progress = 100;
+        //     this.statusGranted = 1;
+        // }
+        // else if (this.representativeInformation !== null && this.detailInformation === null || this.representativeInformation === null && this.detailInformation !== null) {
+        //     this.progress = 50;
+        //     this.statusGranted = 0;
+        // }
+
+    }
 }

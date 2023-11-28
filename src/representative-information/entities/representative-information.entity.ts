@@ -1,6 +1,6 @@
 import { BadRequestException } from "@nestjs/common";
 import { Restaurant } from "src/restaurant/entities/restaurant.entity";
-import { BeforeInsert, BeforeUpdate, Column, Entity, OneToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, Entity, JoinColumn, OneToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('representative-information')
 export class RepresentativeInformation {
@@ -28,7 +28,7 @@ export class RepresentativeInformation {
     @Column({
         type: 'text',
         array: true,
-        nullable: false
+        nullable:false
     })
     idCard: string[];
 
@@ -75,6 +75,6 @@ export class RepresentativeInformation {
     }
 
     @OneToOne(() => Restaurant, restaurant => restaurant.representativeInformation, { nullable: false })
+    @JoinColumn()
     restaurant: Restaurant;
-
 }

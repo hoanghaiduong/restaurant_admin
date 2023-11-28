@@ -30,19 +30,18 @@ export class DetailInformationController {
       maxCount: 5
     }
   ])
-  async create(@Body() createDetailInformationDto: CreateDetailInformationDto, @UploadedFiles() files: {
+  async create(@Body() dto: CreateDetailInformationDto, @UploadedFiles() files: {
     avatar: Express.Multer.File,
     coverImage: Express.Multer.File,
     facadeImage: Express.Multer.File,
     menuImages: Express.Multer.File[]
-  }): Promise<DetailInformation|any> {
-    
+  }): Promise<DetailInformation> {
     return await this.detailInformationService.create({
-      ...createDetailInformationDto,
+      ...dto,
       avatar: files?.avatar[0],
-      coverImage:files?.coverImage[0],
-      facadeImage:files?.facadeImage[0],
-      menuImages:files.menuImages
+      coverImage: files?.coverImage[0],
+      facadeImage: files?.facadeImage[0],
+      menuImages: files.menuImages
     });
   }
 

@@ -7,6 +7,7 @@ import { ImageTypes } from 'src/common/enum/file';
 import { StringUtil } from 'src/common/utils/strings.util';
 
 
+
 @Injectable()
 export class StorageService implements OnModuleInit {
     constructor(
@@ -16,34 +17,17 @@ export class StorageService implements OnModuleInit {
     }
     onModuleInit(): void {
         const path = join('.', this.configService.get<string>('FOLDER_UPLOAD'));
-        console.log(path)
+        console.log(path);
+
         if (!fs.existsSync(path)) {
-            fs.mkdirSync(path);
+            try {
+                fs.mkdirSync(path, { recursive: true });
+            } catch (error) {
+                console.error('Error creating directory:', error);
+            }
         }
     }
 
-    // private async uploadStorage(type: ImageTypes | string, file: Express.Multer.File): Promise<string> {
-    //     const patch = this.configService.get<string>("FOLDER_UPLOAD");
-    //     switch (file.mimetype) {
-    //         case 'image/jpeg':
-    //         case 'image/png':
-    //             // Xử lý cho các loại hình ảnh JPEG và PNG
-    //             const imageName = await this.buildImageFileName(type, file);
-    //             const imagePath = await this.buildImageFilePath(type, imageName);
-    //             await sharp(file.buffer).toFile(imagePath);
-
-
-    //             return imagePath.replace(/\\/g, '/').replace(patch, '/uploads/');
-    //         default:
-
-    //             // Xử lý cho các trường hợp mimetype không rơi vào các trường hợp trên
-    //             const fileName = await this.buildOtherFileName(type, file.filename)
-    //             const filePath = await this.buildImageFilePath(type, fileName);
-    //             await sharp(filePath).toFile(filePath)
-    //             return filePath.replace(/\\/g, '/').replace(patch, '/uploads/');
-    //     }
-
-    // }
     private async uploadStorage(type: ImageTypes | string, file: Express.Multer.File): Promise<string> {
         const baseUploadPath = join('public', 'uploads');
 
@@ -65,10 +49,10 @@ export class StorageService implements OnModuleInit {
         console.log(`Image ${imageName} uploaded to ${subUploadPath} with ${imagePath}`);
         await sharp(file.buffer, {
             limitInputPixels: false,
-            
+
         }).toFile(imagePath);
 
-        return imagePath.replace(/\\/g, '/').replace(/public/, '/uploads');
+        return imagePath.replace(/\\/g, '/').replace(/public/, '');
     }
 
     async uploadFile(type: ImageTypes | string, file: Express.Multer.File): Promise<string> {
@@ -77,7 +61,9 @@ export class StorageService implements OnModuleInit {
     }
 
     async uploadMultiFiles(type: ImageTypes | string, files: Express.Multer.File[]): Promise<string[]> {
+
         return Promise.all(files.map((file) => this.uploadStorage(type, file)));
+
     }
 
     async deleteFile(fileName: string): Promise<void> {

@@ -1,6 +1,7 @@
 import { IsString, IsNotEmpty, IsUUID, IsPhoneNumber, IsObject, IsNumber, Min, Max } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Location } from 'src/common/interface/locations';
+import { Transform } from 'class-transformer';
 
 export class CreateRestaurantDto {
     @ApiProperty()
@@ -37,7 +38,8 @@ export class CreateRestaurantDto {
     houseNumber: string;
 
     @ApiProperty()
-    @IsObject()
+    @Transform(({ value }) => typeof value === 'string' ? JSON.parse(value) : value)
+    @Transform(({ value }) => typeof value === 'object' ? value : JSON.parse(value))
     location: Location;
 
     @ApiProperty({
