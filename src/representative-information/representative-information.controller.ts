@@ -5,6 +5,7 @@ import { UpdateRepresentativeInformationDto } from './dto/update-representative-
 import { ApiTags } from '@nestjs/swagger';
 import { ApiMultipleFieldFiles } from 'src/common/decorators/file.decorator';
 import { RepresentativeInformation } from './entities/representative-information.entity';
+import { Pagination } from 'src/common/pagination/pagination.dto';
 
 @Controller('representative-information')
 @ApiTags("API Đăng ký thông tin người đại diện thuộc nhà hàng (bước 2)")
@@ -46,8 +47,8 @@ export class RepresentativeInformationController {
   }
 
   @Get('gets')
-  async findAll() {
-    return this.representativeInformationService.findAll();
+  async findAll(@Query() pagination: Pagination) {
+    return this.representativeInformationService.findAll(pagination);
   }
 
   @Get('get')
@@ -65,3 +66,4 @@ export class RepresentativeInformationController {
     return this.representativeInformationService.remove(id);
   }
 }
+

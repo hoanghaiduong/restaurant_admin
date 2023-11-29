@@ -10,6 +10,9 @@ import { ImageTypes } from 'src/common/enum/file';
 import { join } from 'path';
 import * as fs from 'fs';
 import { ConfigService } from '@nestjs/config';
+import { Pagination } from 'src/common/pagination/pagination.dto';
+import { Meta } from 'src/common/pagination/meta.dto';
+import { PaginationModel } from 'src/common/pagination/pagination.model';
 
 @Injectable()
 export class RepresentativeInformationService {
@@ -103,8 +106,13 @@ export class RepresentativeInformationService {
     }
   }
 
-  async findAll(): Promise<RepresentativeInformation[]> {
-    return await this.representativeRepository.find();
+  async findAll(pagination: Pagination): Promise<PaginationModel<RepresentativeInformation>> {
+    const [entities, itemCount] = await this.representativeRepository.findAndCount({
+      take: pagination.take,
+      skip: pagination.skip
+    })
+    const meta = new Meta({ pagination, itemCount });
+    return new PaginationModel<RepresentativeInformation>(entities, meta);
   }
 
   async findOne(id: string): Promise<RepresentativeInformation> {
