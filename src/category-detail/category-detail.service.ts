@@ -15,12 +15,12 @@ export class CategoryDetailService extends BaseService<CategoryDetail>{
   ) {
     super(categoryDetailRepository);
   }
-  async create(dto: CreateCategoryDetailDto): Promise<CategoryDetail> {
-    const category = await this.categoryService.findOne(dto.categoryId);
-    const creating = this.categoryDetailRepository.create({
-      ...dto,
-      category
-    })
-    return await this.categoryDetailRepository.save(creating);
-  }
+  // async create(dto: CreateCategoryDetailDto): Promise<CategoryDetail> {
+  //   const category = await this.categoryService.findOne(dto.categoryId);
+  //   const creating = this.categoryDetailRepository.create({
+  //     ...dto,
+  //     category
+  //   })
+  //   return await this.categoryDetailRepository.save(creating);
+  // }
 }

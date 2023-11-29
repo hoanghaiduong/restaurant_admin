@@ -3,6 +3,8 @@ import { CreateUserDto } from './create-user.dto';
 import { Location } from 'src/common/interface/locations';
 import { Role } from 'src/roles/entities/role.entity';
 import { LocationDto } from './location.dto';
+import { ValidateNested } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class UpdateUserDto {
 
@@ -21,6 +23,8 @@ export class UpdateUserDto {
         type: LocationDto,
         required: false,
     })
+    @ValidateNested()
+    @Transform(({ value }) => typeof value === 'string' ? JSON.parse(value) : value)
     location?: Location;
     @ApiProperty({
         type: "string",

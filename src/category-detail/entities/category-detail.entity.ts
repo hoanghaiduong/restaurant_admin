@@ -5,6 +5,6 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 @Entity()
 export class CategoryDetail extends BaseEntity {
 
-    @ManyToOne(() => Category, category => category.categoryDetails)
-    category: Category;
+    // @ManyToOne(() => Category, category => category.categoryDetails)
+    // category: Category;
 }

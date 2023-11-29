@@ -44,6 +44,7 @@ export class RestaurantService {
         .leftJoinAndSelect('restaurant.detailInformation', 'detailInformation')
         .leftJoinAndSelect('restaurant.representativeInformation', 'representativeInformation')
         .leftJoinAndSelect('restaurant.businessModel', 'businessModel')
+        .leftJoinAndSelect('restaurant.products', 'products')
         .skip(pagination.skip)
         .take(pagination.take)
         .orderBy('restaurant.name', pagination.order)
