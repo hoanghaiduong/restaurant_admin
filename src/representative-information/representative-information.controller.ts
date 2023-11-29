@@ -36,7 +36,7 @@ export class RepresentativeInformationController {
     taxCodeImages: Express.Multer.File[],
     relatedImages: Express.Multer.File[]
   }): Promise<RepresentativeInformation> {
-    return await this.representativeInformationService.create(restaurantId,{
+    return await this.representativeInformationService.create(restaurantId, {
       ...createRepresentativeInformationDto,
       idCard: files.idCard,
       businessRegImages: files.businessRegImages,
@@ -55,13 +55,13 @@ export class RepresentativeInformationController {
     return await this.representativeInformationService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRepresentativeInformationDto: UpdateRepresentativeInformationDto) {
-    return this.representativeInformationService.update(+id, updateRepresentativeInformationDto);
+  @Patch('update')
+  async update(@Query('id') id: string, @Body() updateRepresentativeInformationDto: UpdateRepresentativeInformationDto) {
+    return this.representativeInformationService.update(id, updateRepresentativeInformationDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.representativeInformationService.remove(+id);
+  @Delete('delete')
+  async remove(@Query('id') id: string) {
+    return this.representativeInformationService.remove(id);
   }
 }

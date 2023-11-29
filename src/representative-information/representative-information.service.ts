@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateRepresentativeInformationDto } from './dto/create-representative-information.dto';
 import { UpdateRepresentativeInformationDto } from './dto/update-representative-information.dto';
 import { RepresentativeInformation } from './entities/representative-information.entity';
@@ -103,19 +103,46 @@ export class RepresentativeInformationService {
     }
   }
 
-  findAll() {
-    return `This action returns all representativeInformation`;
+  async findAll(): Promise<RepresentativeInformation[]> {
+    return await this.representativeRepository.find();
   }
 
   async findOne(id: string): Promise<RepresentativeInformation> {
-    return;
+    const representativeInformation = await this.representativeRepository.findOne({
+      where: {
+        id
+      }
+    })
+    if (!representativeInformation) throw new NotFoundException({
+      message: 'Representative information not found'
+    })
+    return representativeInformation;
   }
 
-  update(id: number, updateRepresentativeInformationDto: UpdateRepresentativeInformationDto) {
-    return `This action updates a #${id} representativeInformation`;
+  async update(id: string, dto: UpdateRepresentativeInformationDto): Promise<RepresentativeInformation> {
+    try {
+      const representativeInformation = await this.findOne(id);
+      const merged = this.representativeRepository.merge(representativeInformation, {
+        ...dto,
+      })
+      return await this.representativeRepository.save(merged);
+    } catch (error) {
+      throw new BadRequestException(error)
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} representativeInformation`;
+  async remove(id: string): Promise<object> {
+    try {
+      const represent = await this.findOne(id);
+      const removed = await this.representativeRepository.remove(represent);
+      if (removed) {
+        return {
+          message: 'Representative information deleted successfully'
+        }
+      }
+
+    } catch (error) {
+      throw new BadRequestException(error)
+    }
   }
 }

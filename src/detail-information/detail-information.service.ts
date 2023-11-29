@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateDetailInformationDto } from './dto/create-detail-information.dto';
 import { UpdateDetailInformationDto } from './dto/update-detail-information.dto';
 import { DetailInformation } from './entities/detail-information.entity';
@@ -13,6 +13,9 @@ import *  as fs from 'fs'
 
 import { TypeOfServiceService } from 'src/type-of-service/type-of-service.service';
 import { Transactional } from 'typeorm-transactional';
+import { PaginationModel } from 'src/common/pagination/pagination.model';
+import { Pagination } from 'src/common/pagination/pagination.dto';
+import { Meta } from 'src/common/pagination/meta.dto';
 
 @Injectable()
 export class DetailInformationService {
@@ -74,20 +77,44 @@ export class DetailInformationService {
 
   }
 
-  findAll() {
-    return `This action returns all detailInformation`;
+  async findAll(pagination: Pagination): Promise<PaginationModel<DetailInformation>> {
+    const [entities, itemCount] = await this.detailInformationRepository.findAndCount({
+      take: pagination.take,
+      skip: pagination.skip,
+    })
+    const meta = new Meta({ itemCount, pagination });
+    return new PaginationModel<DetailInformation>(entities, meta);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} detailInformation`;
+  async findOne(id: string): Promise<DetailInformation> {
+    const detailInformation = await this.detailInformationRepository.findOne({
+      where: { id }
+    })
+    if (!detailInformation) throw new NotFoundException('Detail information not found')
+    return detailInformation;
   }
 
-  update(id: number, updateDetailInformationDto: UpdateDetailInformationDto) {
-    return `This action updates a #${id} detailInformation`;
+  async update(id: string, dto: UpdateDetailInformationDto) {
+    try {
+      const entity = await this.findOne(id);
+      const merged = this.detailInformationRepository.merge(entity, dto);
+      return await this.detailInformationRepository.save(merged);
+    } catch (error) {
+      throw new BadRequestException(error)
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} detailInformation`;
+  async remove(id: string): Promise<object> {
+    try {
+      const entity = await this.findOne(id);
+      await this.detailInformationRepository.remove(entity);
+      return {
+        message: 'Delete Detail Information with id ' + id + ' successfully'
+      }
+
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
   }
 
 }

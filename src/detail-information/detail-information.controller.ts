@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UploadedFiles } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UploadedFiles, Query } from '@nestjs/common';
 import { DetailInformationService } from './detail-information.service';
 import { CreateDetailInformationDto } from './dto/create-detail-information.dto';
 import { UpdateDetailInformationDto } from './dto/update-detail-information.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { DetailInformation } from './entities/detail-information.entity';
 import { ApiMultipleFieldFiles } from 'src/common/decorators/file.decorator';
+import { Pagination } from 'src/common/pagination/pagination.dto';
 
 @Controller('detail-information')
 @ApiTags("API thông tin chi tiết nhà hàng (bước 3)")
@@ -46,22 +47,22 @@ export class DetailInformationController {
   }
 
   @Get()
-  findAll() {
-    return this.detailInformationService.findAll();
+  async findAll(@Query() pagination: Pagination) {
+    return this.detailInformationService.findAll(pagination);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.detailInformationService.findOne(+id);
+  @Get('get')
+  findOne(@Query('id') id: string) {
+    return this.detailInformationService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDetailInformationDto: UpdateDetailInformationDto) {
-    return this.detailInformationService.update(+id, updateDetailInformationDto);
+  @Patch('update')
+  update(@Query('id') id: string, @Body() updateDetailInformationDto: UpdateDetailInformationDto) {
+    return this.detailInformationService.update(id, updateDetailInformationDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.detailInformationService.remove(+id);
+  @Delete('delete')
+  remove(@Query('id') id: string) {
+    return this.detailInformationService.remove(id);
   }
 }
