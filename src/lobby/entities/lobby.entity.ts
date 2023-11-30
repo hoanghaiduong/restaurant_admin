@@ -35,7 +35,7 @@ export class Lobby extends DateTimeEntity {
         type: 'text',
         array: true
     })
-    images: string;
+    images: string[];
 
     @Column({
         nullable: true

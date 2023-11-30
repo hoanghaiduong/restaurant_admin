@@ -14,6 +14,7 @@ import { Response, response } from 'express';
 
 @Injectable()
 export class RestaurantService {
+
   constructor(@InjectRepository(Restaurant) private restaurantRepository: Repository<Restaurant>,
     private businessModelService: BusinessModelService,
     private userService: UsersService,
@@ -64,7 +65,23 @@ export class RestaurantService {
       });
     }
   }
+  async findAllProduct(id: string): Promise<Restaurant> {
+    try {
+      const restaurant = await this.restaurantRepository.findOne({
+        where: { id },
+        relations: ['products']
+      })
+      if (!restaurant) throw new NotFoundException({
+        message: 'No restaurant found'
+      })
+      return restaurant;
 
+    } catch (error) {
+      throw new BadRequestException({
+        message: error.message
+      })
+    }
+  }
   async findAll(pagination: Pagination): Promise<PaginationModel<Restaurant>> {
     try {
       const [entities, itemCount] = await this.restaurantRepository.findAndCount({

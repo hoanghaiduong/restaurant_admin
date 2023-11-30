@@ -29,7 +29,10 @@ export class RestaurantController {
   async findAll(@Query() pagination: Pagination): Promise<PaginationModel<Restaurant>> {
     return await this.restaurantService.findAll(pagination);
   }
-
+  @Get('getProducts')
+  async findAllProduct(@Query('restaurant_id') resId: string): Promise<Restaurant> {
+    return await this.restaurantService.findAllProduct(resId);
+  }
   @Get('get')
   async findOne(@Query('id') id: string): Promise<Restaurant> {
     return await this.restaurantService.findOne(id);

@@ -9,6 +9,7 @@ import { ILike, Repository } from 'typeorm';
 import { Meta } from 'src/common/pagination/meta.dto';
 import { RestaurantService } from 'src/restaurant/restaurant.service';
 import { StorageService } from 'src/storage/storage.service';
+import { ImageTypes } from 'src/common/enum/file';
 
 @Injectable()
 export class LobbyService {
@@ -44,14 +45,24 @@ export class LobbyService {
   }
 
   async create(dto: CreateLobbyDto): Promise<Lobby> {
+    const imagesToDelete: string[] = [];
     try {
-
+      const restaurant = await this.restaurantService.findOne(dto.restaurantId);
+      const photo = await this.storageService.uploadFile(`${restaurant.name}/${ImageTypes.CARD_LOBBY}`, dto.photo);
+      const images = dto.images ? await this.storageService.uploadMultiFiles(`${restaurant.name}/${ImageTypes.CARD_LOBBY}`, dto.images) : null;
+      imagesToDelete.push(photo, ...images);
+      const creating = this.lobbiesRepository.create({
+        ...dto,
+        restaurant,
+        photo,
+        images
+      })
+      return await this.lobbiesRepository.save(creating);
     } catch (error) {
+      await this.storageService.deleteMultiFiles(imagesToDelete);
       throw new BadRequestException(error)
     }
-    // const lobby = this.lobbiesRepository.create(dto);
-    // return this.lobbiesRepository.save(lobby);
-    return
+
   }
 
   async update(id: string, lobbyDto: CreateLobbyDto): Promise<Lobby> {
@@ -60,8 +71,7 @@ export class LobbyService {
     } catch (error) {
       throw new BadRequestException(error)
     }
-    // await this.lobbiesRepository.update(id, lobbyDto);
-    // return this.lobbiesRepository.findOne(id);
+
     return;
   }
 

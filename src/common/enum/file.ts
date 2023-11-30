@@ -7,6 +7,7 @@ export enum ImageTypes {
     CARD_USER = 'users',
     CARD_RESTAURANT = 'restaurants',
     CARD_PRODUCT = 'products',
+    CARD_LOBBY = 'lobbies',
     CARD_PRODUCT_DETAILS = 'images',
     CARD_RESTAURANT_ID_CARD = 'id_card',
     CARD_RESTAURANT_BUSINESS_REGISTER = 'business_register',
