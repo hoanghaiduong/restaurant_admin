@@ -1,5 +1,6 @@
 import { DateTimeEntity } from "src/common/entities/DateTime.entity";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Restaurant } from "src/restaurant/entities/restaurant.entity";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Lobby extends DateTimeEntity {
@@ -9,7 +10,7 @@ export class Lobby extends DateTimeEntity {
     @Column()
     name: string;
 
-    
+
     @Column({
         nullable: true
     })
@@ -40,4 +41,7 @@ export class Lobby extends DateTimeEntity {
         nullable: true
     })
     acreage: string;
+
+    @ManyToOne(() => Restaurant, restaurant => restaurant.lobbies, { nullable: false })
+    restaurant: Restaurant;
 }

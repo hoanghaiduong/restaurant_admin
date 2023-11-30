@@ -7,12 +7,16 @@ import { Lobby } from './entities/lobby.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ILike, Repository } from 'typeorm';
 import { Meta } from 'src/common/pagination/meta.dto';
+import { RestaurantService } from 'src/restaurant/restaurant.service';
+import { StorageService } from 'src/storage/storage.service';
 
 @Injectable()
 export class LobbyService {
   constructor(
     @InjectRepository(Lobby)
     private readonly lobbiesRepository: Repository<Lobby>,
+    private readonly restaurantService: RestaurantService,
+    private readonly storageService: StorageService
   ) { }
 
   async findAll(pagination: Pagination): Promise<PaginationModel<Lobby>> {

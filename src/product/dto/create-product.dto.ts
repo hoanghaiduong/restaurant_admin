@@ -20,7 +20,7 @@ export class CreateProductDto {
     @ApiProperty({
         type: 'string', format: 'binary'
     })
-    @IsNotEmpty()
+   // @IsNotEmpty()
     photo: Express.Multer.File;
 
     @ApiProperty({ required: false, type: 'string', format: 'binary', isArray: true })

@@ -2,6 +2,7 @@ import { BusinessModel } from "src/business-model/entities/business-model.entity
 import { DateTimeEntity } from "src/common/entities/DateTime.entity";
 import { Location } from "src/common/interface/locations";
 import { DetailInformation } from "src/detail-information/entities/detail-information.entity";
+import { Lobby } from "src/lobby/entities/lobby.entity";
 import { Product } from "src/product/entities/product.entity";
 import { RepresentativeInformation } from "src/representative-information/entities/representative-information.entity";
 import { User } from "src/users/entities/user.entity";
@@ -83,6 +84,9 @@ export class Restaurant extends DateTimeEntity {
 
     @OneToMany(() => Product, products => products.restaurant, { nullable: true })
     products: Product[];
+
+    @OneToMany(() => Lobby, lobbies => lobbies.restaurant, { nullable: true })
+    lobbies: Lobby[];
     @BeforeInsert()
     @BeforeUpdate()
     async checkStatusAndProgress(): Promise<void> {

@@ -1,6 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsUUID } from 'class-validator';
 
 export class CreateLobbyDto {
+    @ApiProperty()
+    @IsUUID()
+    restaurantId?: string;
     @ApiProperty({ example: 'My Lobby', description: 'The name of the lobby' })
     name: string;
 
@@ -21,4 +25,6 @@ export class CreateLobbyDto {
 
     @ApiProperty({ example: '1000 sqft', description: 'The acreage of the lobby', required: false })
     acreage?: string;
+
+
 }
