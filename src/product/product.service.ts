@@ -52,8 +52,13 @@ export class ProductService {
 
       const restaurant = await this.restaurantService.findOne(dto.restaurantId);
       const category = await this.categoryService.findOne(dto.categoryId);
+
       const photo = await this.storageService.uploadFile(`${restaurant.name}/${ImageTypes.CARD_PRODUCT}`, dto.photo);
-      const images = await this.storageService.uploadMultiFiles(`${restaurant.name}/${ImageTypes.CARD_PRODUCT}/${ImageTypes.CARD_PRODUCT_DETAILS}`, dto.images);
+      let images: string[] = [];
+      if (dto.images) {
+        images = await this.storageService.uploadMultiFiles(`${restaurant.name}/${ImageTypes.CARD_PRODUCT}/${ImageTypes.CARD_PRODUCT_DETAILS}`, dto.images);
+      }
+
       imageToDelete.push(photo, ...images);
       const creating = this.productRepository.create({
         ...dto,
