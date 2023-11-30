@@ -76,6 +76,7 @@ export class RestaurantService {
         order: {
           name: pagination.order
         },
+        relations: ['user', 'detailInformation', 'representativeInformation', 'businessModel', 'products', 'lobbies']
       });
       const meta = new Meta({ pagination, itemCount });
       return new PaginationModel<Restaurant>(entities, meta);
