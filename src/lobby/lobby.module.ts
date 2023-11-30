@@ -7,6 +7,7 @@ import { Lobby } from './entities/lobby.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([Lobby])],
   controllers: [LobbyController],
-  providers: [LobbyService]
+  providers: [LobbyService],
+  exports: [LobbyService]
 })
 export class LobbyModule { }

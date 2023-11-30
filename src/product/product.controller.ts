@@ -45,6 +45,11 @@ export class ProductController {
     return await this.productService.update(id, product);
   }
 
+  @Put('update-image')
+  async updateImage(@Query('id') id: string, @Body() product: UpdateProductDto): Promise<Product> {
+    return await this.productService.update(id, product);
+  }
+
   @Delete('delete')
   async remove(@Query('id') id: string): Promise<object> {
     return await this.productService.remove(id);

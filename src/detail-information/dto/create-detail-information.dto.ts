@@ -12,44 +12,44 @@ export class CreateDetailInformationDto {
     @ApiProperty() // Một ví dụ cho mối quan hệ một-đến-một
     @ValidateNested()
     @Transform(({ value }) => typeof value === "string" ? JSON.parse(value) : value)
-    @Transform(({ value }) => typeof value === 'object' ? value : JSON.parse(value))
+    // @Transform(({ value }) => typeof value === 'object' ? value : JSON.parse(value))
 
     sunday: DaySchedule;
 
     @ApiProperty()
     @ValidateNested()
     @Transform(({ value }) => typeof value === "string" ? JSON.parse(value) : value)
-    @Transform(({ value }) => typeof value === 'object' ? value : JSON.parse(value))
+    // @Transform(({ value }) => typeof value === 'object' ? value : JSON.parse(value))
 
     monday: DaySchedule;
 
     @ApiProperty()
     @ValidateNested()
     @Transform(({ value }) => typeof value === "string" ? JSON.parse(value) : value)
-    @Transform(({ value }) => typeof value === 'object' ? value : JSON.parse(value))
+    // @Transform(({ value }) => typeof value === 'object' ? value : JSON.parse(value))
     tuesday: DaySchedule;
 
     @ApiProperty()
     @ValidateNested()
     @Transform(({ value }) => typeof value === "string" ? JSON.parse(value) : value)
-    @Transform(({ value }) => typeof value === 'object' ? value : JSON.parse(value))
+    // @Transform(({ value }) => typeof value === 'object' ? value : JSON.parse(value))
     wednesday: DaySchedule;
 
     @ApiProperty()
     @ValidateNested()
     @Transform(({ value }) => typeof value === "string" ? JSON.parse(value) : value)
-    @Transform(({ value }) => typeof value === 'object' ? value : JSON.parse(value))
+    // @Transform(({ value }) => typeof value === 'object' ? value : JSON.parse(value))
     thursday: DaySchedule;
     @ApiProperty()
     @ValidateNested()
     @Transform(({ value }) => typeof value === "string" ? JSON.parse(value) : value)
-    @Transform(({ value }) => typeof value === 'object' ? value : JSON.parse(value))
+    // @Transform(({ value }) => typeof value === 'object' ? value : JSON.parse(value))
     friday: DaySchedule;
 
     @ApiProperty()
     @ValidateNested()
     @Transform(({ value }) => typeof value === "string" ? JSON.parse(value) : value)
-    @Transform(({ value }) => typeof value === 'object' ? value : JSON.parse(value))
+    // @Transform(({ value }) => typeof value === 'object' ? value : JSON.parse(value))
     saturday: DaySchedule;
 
     @ApiProperty({ example: 'Sample Keyword' })

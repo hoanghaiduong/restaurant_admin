@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, Query } from '@nestjs/common';
 import { LobbyService } from './lobby.service';
 import { CreateLobbyDto } from './dto/create-lobby.dto';
 import { UpdateLobbyDto } from './dto/update-lobby.dto';
@@ -12,28 +12,32 @@ import { Pagination } from 'src/common/pagination/pagination.dto';
 export class LobbyController {
   constructor(private readonly lobbyService: LobbyService) { }
 
+  @Get()
+  async findAll(@Query() pagination: Pagination): Promise<PaginationModel<Lobby>> {
+    return this.lobbyService.findAll(pagination);
+  }
+
+  @Get('get')
+  async findOne(@Query('id') id: string): Promise<Lobby> {
+    return this.lobbyService.findOne(id);
+  }
+
   @Post('create')
-  async create(@Body() createLobbyDto: CreateLobbyDto): Promise<Lobby> {
-    return await this.lobbyService.create(createLobbyDto);
+  async create(@Body() lobbyDto: CreateLobbyDto): Promise<Lobby> {
+    return this.lobbyService.create(lobbyDto);
   }
 
-  @Get('gets')
-  async findAll(pagination: Pagination): Promise<PaginationModel<Lobby>> {
-    return await this.lobbyService.findAll(pagination);
+  @Put('update')
+  async update(
+    @Query('id') id: string,
+    @Body() lobbyDto: CreateLobbyDto,
+  ): Promise<Lobby> {
+    return this.lobbyService.update(id, lobbyDto);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.lobbyService.findOne(+id);
+  @Delete('delete')
+  async remove(@Query('id') id: string): Promise<object> {
+    return this.lobbyService.remove(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateLobbyDto: UpdateLobbyDto) {
-    return this.lobbyService.update(+id, updateLobbyDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.lobbyService.remove(+id);
-  }
 }
