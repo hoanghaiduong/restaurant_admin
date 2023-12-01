@@ -82,7 +82,7 @@ export class Restaurant extends DateTimeEntity {
 
     detailInformation: DetailInformation;
 
-    @OneToMany(() => Product, products => products.restaurant, { nullable: true })
+    @OneToMany(() => Product, products => products.restaurant, { nullable: true, onDelete: 'CASCADE', onUpdate: 'CASCADE' })
     products: Product[];
 
     @OneToMany(() => Lobby, lobbies => lobbies.restaurant, { nullable: true })

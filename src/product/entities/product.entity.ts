@@ -4,7 +4,7 @@ import { Restaurant } from 'src/restaurant/entities/restaurant.entity';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, OneToMany } from 'typeorm';
 
 @Entity()
-export class Product extends DateTimeEntity{
+export class Product extends DateTimeEntity {
     @PrimaryGeneratedColumn('uuid')
     id: string;
 
@@ -33,7 +33,7 @@ export class Product extends DateTimeEntity{
     @ManyToOne(() => Category, category => category.products, { nullable: false })
     category: Category;
 
-    @ManyToOne(() => Restaurant, restaurants => restaurants.products, { nullable: false })
+    @ManyToOne(() => Restaurant, restaurants => restaurants.products, { nullable: false, cascade: true, onDelete: 'CASCADE' })
     restaurant: Restaurant;
 
 }
