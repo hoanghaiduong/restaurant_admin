@@ -122,11 +122,15 @@ export class RestaurantService {
     })
   }
 
-  async remove(id: string): Promise<Response> {
-    const restaurant = await this.findOne(id);
-    await this.restaurantRepository.remove(restaurant);
-    return response.status(200).json({
-      message: 'Delete was successful'
-    });
+  async remove(id: string): Promise<object> {
+    try {
+      const restaurant = await this.findOne(id);
+      await this.restaurantRepository.remove(restaurant);
+      return {
+        message: 'Restaurant deleted successfully'
+      }
+    } catch (error) {
+      throw new BadRequestException(error.message)
+    }
   }
 }
