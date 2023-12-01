@@ -69,7 +69,7 @@ export class RestaurantService {
     try {
       const restaurant = await this.restaurantRepository.findOne({
         where: { id },
-        relations: ['products']
+        relations: ['user', 'detailInformation', 'representativeInformation', 'businessModel', 'products', 'lobbies']
       })
       if (!restaurant) throw new NotFoundException({
         message: 'No restaurant found'
