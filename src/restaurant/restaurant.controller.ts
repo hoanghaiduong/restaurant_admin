@@ -48,7 +48,7 @@ export class RestaurantController {
   }
 
   @Delete('delete')
-  async remove(@Query('id') id: string): Promise<Response> {
+  async remove(@Query('id') id: string): Promise<object> {
     return await this.restaurantService.remove(id);
   }
 }
