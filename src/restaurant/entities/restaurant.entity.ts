@@ -74,11 +74,11 @@ export class Restaurant extends DateTimeEntity {
     @ManyToOne(() => User, users => users.restaurants, { nullable: false })
     user: User;
 
-    @OneToOne(() => RepresentativeInformation, representativeInformation => representativeInformation.restaurant, { nullable: true, cascade: true })
+    @OneToOne(() => RepresentativeInformation, representativeInformation => representativeInformation.restaurant, { nullable: true, onDelete: 'CASCADE' })
 
     representativeInformation: RepresentativeInformation;
 
-    @OneToOne(() => DetailInformation, detailInformation => detailInformation.restaurant, { nullable: true, cascade: true })
+    @OneToOne(() => DetailInformation, detailInformation => detailInformation.restaurant, { nullable: true, onDelete: 'CASCADE' })
 
     detailInformation: DetailInformation;
 

@@ -92,7 +92,7 @@ export class DetailInformation {
     })
     typeOfServices: TypeOfService[];
 
-    @OneToOne(() => Restaurant, restaurant => restaurant.detailInformation, { nullable: false })
+    @OneToOne(() => Restaurant, restaurant => restaurant.detailInformation, { nullable: false, onDelete: 'CASCADE' })
     @JoinColumn()
     restaurant: Restaurant;
 }

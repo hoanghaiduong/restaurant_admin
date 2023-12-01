@@ -74,7 +74,7 @@ export class RepresentativeInformation {
         }
     }
 
-    @OneToOne(() => Restaurant, restaurant => restaurant.representativeInformation, { nullable: false })
+    @OneToOne(() => Restaurant, restaurant => restaurant.representativeInformation, { nullable: false,onDelete:'CASCADE' })
     @JoinColumn()
     restaurant: Restaurant;
 }
